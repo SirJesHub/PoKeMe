@@ -5,6 +5,7 @@ function Game({ socket, username, room }) {
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [inputList, setInputList] = useState([]);
   const [score, setScore] = useState(0);
+  const [counter, setCounter] = useState(10);
 
   const sendInput = async () => {
     if (currentInput !== "") {
@@ -44,8 +45,46 @@ function Game({ socket, username, room }) {
     });
   });
 
+  //   const startTimer = () => {
+  //     //setCounter(10);
+  //     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+  //     // while (counter > 0) {
+  //     //   setTimeout(() => setCounter(counter - 1), 1000);
+  //     // }
+  //   };
+  function startTimer(duration, display) {
+    var timer = duration,
+      minutes,
+      seconds;
+    setInterval(function () {
+      minutes = parseInt(timer / 60, 10);
+      seconds = parseInt(timer % 60, 10);
+
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+
+      display.textContent = minutes + ":" + seconds;
+
+      if (--timer < 0) {
+        timer = duration;
+      }
+    }, 1000);
+  }
+
+  window.onload = function () {
+    var fiveMinutes = 60 * 5,
+      display = document.querySelector("#time");
+    startTimer(fiveMinutes, display);
+  };
+
   return (
     <div>
+      <h1>Score = {score}</h1>
+      <h1>Time = {counter} </h1>
+      <div>
+        Registration closes in <span id="time">05:00</span> minutes!
+      </div>
+
       {/* send input */}
       <input
         type="text"
@@ -58,7 +97,14 @@ function Game({ socket, username, room }) {
           event.key === "Enter" && sendInput();
         }}
       />
-      <button onClick={sendInput}>&#9658;</button>
+      <button
+        onClick={() => {
+          sendInput();
+          startTimer();
+        }}
+      >
+        &#9658;
+      </button>
       {/* send answer */}
       <input
         type="text"
@@ -71,8 +117,13 @@ function Game({ socket, username, room }) {
           event.key === "Enter" && checkAnswer();
         }}
       />
-      <button onClick={checkAnswer}>&#9658;</button>
-      <h1>Score = {score}</h1>
+      <button
+        onClick={() => {
+          checkAnswer();
+        }}
+      >
+        &#9658;
+      </button>
     </div>
   );
 }
