@@ -79,51 +79,55 @@ function Game({ socket, username, room }) {
 
   return (
     <div>
-      <h1>Score = {score}</h1>
-      <h1>Time = {counter} </h1>
       <div>
-        Registration closes in <span id="time">05:00</span> minutes!
-      </div>
+        <body></body>
 
-      {/* send input */}
-      <input
-        type="text"
-        value={currentInput}
-        placeholder="input"
-        onChange={(event) => {
-          setCurrentInput(event.target.value);
-        }}
-        onKeyDown={(event) => {
-          event.key === "Enter" && sendInput();
-        }}
-      />
-      <button
-        onClick={() => {
-          sendInput();
-          startTimer();
-        }}
-      >
-        &#9658;
-      </button>
-      {/* send answer */}
-      <input
-        type="text"
-        value={currentAnswer}
-        placeholder="answer"
-        onChange={(event) => {
-          setCurrentAnswer(event.target.value);
-        }}
-        onKeyDown={(event) => {
-          event.key === "Enter" && checkAnswer();
-        }}
-      />
-      <button
-        onClick={() => {
-          checkAnswer();
-        }}
-      >
-        &#9658;
-      </button>
+        <h1>Score = {score}</h1>
+        <h1>Time = {counter} </h1>
+        <div>
+          Registration closes in <span id="time">05:00</span> minutes!
+        </div>
+
+        {/* send input */}
+        <input
+          type="text"
+          value={currentInput}
+          placeholder="input"
+          onChange={(event) => {
+            setCurrentInput(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            event.key === "Enter" && sendInput();
+          }}
+        />
+        <button
+          onClick={() => {
+            sendInput();
+            startTimer();
+          }}
+        >
+          &#9658;
+        </button>
+        {/* send answer */}
+        <input
+          type="text"
+          value={currentAnswer}
+          placeholder="answer"
+          onChange={(event) => {
+            setCurrentAnswer(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            event.key === "Enter" && checkAnswer();
+          }}
+        />
+        <button
+          onClick={() => {
+            checkAnswer();
+          }}
+        >
+          &#9658;
+        </button>
+      </div>
     </div>
   );
 }

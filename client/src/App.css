@@ -36,3 +36,78 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  background-image: url("utils/SynthBG.svg");
+  background-size: auto;
+  background-color: blue;
+}
+
+.gameboy {
+  height: 60%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  transform: translate(-50%,-50%);
+}
+
+.gameBG {
+  height: 30%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate(-50%,-60%);
+}
+
+.input {
+  height: 2%;
+  width: 6%;
+  border-color: transparent;
+  position: absolute;
+  top: 52%;
+  left: 43%;
+  z-index: 3;
+  transform: translate(-50%,-50%);
+}
+
+.input::placeholder {
+  font-family: Arial;
+
+}
+
+.button2 {
+  height: 4%;
+  border-color: transparent;
+  position: absolute;
+  top: 52%;
+  left: 43%;
+  z-index: 3;
+  transform: translate(-50%,-50%);
+}
+
+textarea:focus, input:focus{
+  outline: none;
+}
+
+.button3 {
+  height: 4%;
+  border-color: transparent;
+  position: absolute;
+  top: 45%;
+  left: 43%;
+  z-index: 3;
+  transform: translate(-50%,-50%);
+}
+
+.button3-text {
+  font-size: 20px;
+  color: orange;
+  position: absolute;
+  top: 42.6%;
+  left: 43%;
+  z-index: 4;
+  transform: translate(-50%,-50%);
+}
+
