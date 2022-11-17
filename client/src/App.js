@@ -19,6 +19,16 @@ function App() {
       setGameReady(true);
     }
   };
+
+  const copyRoomID = async () => {
+    try {
+      await navigator.clipboard.writeText(room);
+      console.log('Content copied to clipboard');
+    } catch (err) {
+      console.error('Failed to copy: ', err);
+    }
+  }
+
   return (
     <div className="App">
       {!gameReady ? (
@@ -35,11 +45,13 @@ function App() {
           <input
             type="text"
             placeholder="Room ID"
+            id="RoomID"
             onChange={(event) => {
               setRoom(event.target.value);
             }}
           />
           <button onClick={joinRoom}>Join A Room</button>
+          <button onClick={copyRoomID}>Copy</button>
         </div>
       ) : (
         <Game socket={socket} username={username} room={room} />
