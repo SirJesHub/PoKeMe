@@ -38,9 +38,7 @@
 }
 
 body {
-  background-image: url("utils/SynthBG.svg");
-  background-size: auto;
-  background-color: blue;
+  margin: 0%;
 }
 
 .gameboy {
@@ -92,11 +90,8 @@ textarea:focus, input:focus{
 }
 
 .button3 {
-  height: 4%;
+  height: 2%;
   border-color: transparent;
-  position: absolute;
-  top: 45%;
-  left: 43%;
   z-index: 3;
   transform: translate(-50%,-50%);
 }

@@ -28,9 +28,12 @@ export const X = 'button/X.svg';
 export const PREVIOUS = 'button/Previous.svg';
 export const NEXT = 'button/Back.svg';
 
-export const JOY = 'bg/Joy.svg';
-export const BG_JOY = 'bg/BgJoy.svg';
+export const JOY_IMAGE = 'bg/Joy.png';
+export const BG_GAME = 'bg/gamebg.jpg';
 export const BG = 'bg/Bg.svg';
 
 export const BUTTON2 = 'button/button2.svg';
-export const BUTTON3 = 'button/button3.svg';
+export const BUTTON_BIG = 'button/button3.svg';
+export const BUTTON_SMALL = 'button/button4.svg';
+
+export const GAME_LOGO = 'logoBig.svg'

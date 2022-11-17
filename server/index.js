@@ -22,6 +22,11 @@ io.on("connection", (socket) => {
   socket.on("join_room", (data) => {
     socket.join(data);
     console.log(`User with ID: ${socket.id}joined room: ${data}`);
+    const roomSize = io.of("/").adapter.rooms.get(data).size
+    console.log("room Size", roomSize);
+    if(roomSize == 2) {
+      socket.nsp.to(data).emit('ready_for_char')
+    }
   });
 
   socket.on("send_input", (data) => {
