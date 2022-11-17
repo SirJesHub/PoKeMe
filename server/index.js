@@ -16,18 +16,26 @@ const io = new Server(server, {
   },
 });
 
-
-io.on("connection", socket=>{
+io.on("connection", (socket) => {
   console.log(`User conencted: ${socket.id}`);
 
-  socket.on("join_room", (data) =>{
+  socket.on("join_room", (data) => {
     socket.join(data);
     console.log(`User with ID: ${socket.id}joined room: ${data}`);
   });
 
-  socket.on("disconnect", ()=>{
+  socket.on("send_input", (data) => {
+    console.log(`recieve input = ${data.input}`);
+    socket.to(data.room).emit("recieve_input", data);
+  });
+
+  socket.on("send_answer", (data) => {
+    console.log(`recieve answer = ${data.answer}`);
+  });
+
+  socket.on("disconnect", () => {
     console.log(`User disconencted: ${socket.id}`);
-  })
-})
+  });
+});
 
 server.listen(3001, () => console.log("SERVER IS RUNNING"));
