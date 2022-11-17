@@ -1,7 +1,8 @@
 import "./App.css";
 import io from "socket.io-client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Game from "./Game";
+import { W } from "./utils/constants";
 
 const socket = io.connect("http://localhost:3001");
 
