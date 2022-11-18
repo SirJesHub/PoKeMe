@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 function Game({ socket, username, room }) {
   const [currentInput, setCurrentInput] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [inputList, setInputList] = useState([]);
   const [score, setScore] = useState(0);
-  const [counter, setCounter] = useState(10);
+  const [waitForP2, setwaitForP2] = useState(false);
 
+  //send input
   const sendInput = async () => {
     if (currentInput !== "") {
       const inputData = {
@@ -20,7 +22,9 @@ function Game({ socket, username, room }) {
       setCurrentInput("");
     }
   };
+  //send input finish
 
+  //send answer
   const checkAnswer = async () => {
     if (currentAnswer !== "") {
       const answerData = {
@@ -38,92 +42,105 @@ function Game({ socket, username, room }) {
       setCurrentAnswer("");
     }
   };
+  //send answer finish
+
+  //check connection
+  // window.onload = async (event) => {
+  //   await socket.emit("req_player_count", room);
+  //   socket.on("send_player_count", (data) => {
+  //     if (data > 1) {
+  //       setwaitForP2(true);
+  //     }
+  //   });
+  // };
+  useEffect(() => {
+    socket.on("player_count", (data) => {
+      if (data > 1) {
+        setwaitForP2(true);
+      }
+    });
+  });
 
   useEffect(() => {
     socket.on("recieve_input", (data) => {
       setInputList((list) => [...list, data.input]);
+      resetTimer();
     });
   });
 
-  //   const startTimer = () => {
-  //     //setCounter(10);
-  //     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
-  //     // while (counter > 0) {
-  //     //   setTimeout(() => setCounter(counter - 1), 1000);
-  //     // }
-  //   };
-  function startTimer(duration, display) {
-    var timer = duration,
-      minutes,
-      seconds;
-    setInterval(function () {
-      minutes = parseInt(timer / 60, 10);
-      seconds = parseInt(timer % 60, 10);
+  //timer
+  const startingSecond = 20; //change this to change timer
+  let time = startingSecond;
+  let refreshIntervalId = setInterval(updateCountdown, 1000);
 
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+  function updateCountdown() {
+    let seconds = time;
+    const countdownEl = document.getElementById("countdown");
+    countdownEl.innerHTML = `${seconds}`;
+    time--;
 
-      display.textContent = minutes + ":" + seconds;
-
-      if (--timer < 0) {
-        timer = duration;
-      }
-    }, 1000);
+    if (time < 0) clearInterval(refreshIntervalId);
   }
 
-  window.onload = function () {
-    var fiveMinutes = 60 * 5,
-      display = document.querySelector("#time");
-    startTimer(fiveMinutes, display);
-  };
+  function resetTimer() {
+    time = startingSecond;
+  }
+  //timer finish
 
   return (
     <div>
-      <h1>Score = {score}</h1>
-      <h1>Time = {counter} </h1>
-      <div>
-        Registration closes in <span id="time">05:00</span> minutes!
-      </div>
+      {!waitForP2 ? (
+        <div>
+          <h1>Waiting for Player 2</h1>
+          <button onClick={() => {}}></button>
+        </div>
+      ) : (
+        <div>
+          <h1>Score = {score}</h1>
+          <h1 id="countdown"></h1>
 
-      {/* send input */}
-      <input
-        type="text"
-        value={currentInput}
-        placeholder="input"
-        onChange={(event) => {
-          setCurrentInput(event.target.value);
-        }}
-        onKeyDown={(event) => {
-          event.key === "Enter" && sendInput();
-        }}
-      />
-      <button
-        onClick={() => {
-          sendInput();
-          startTimer();
-        }}
-      >
-        &#9658;
-      </button>
-      {/* send answer */}
-      <input
-        type="text"
-        value={currentAnswer}
-        placeholder="answer"
-        onChange={(event) => {
-          setCurrentAnswer(event.target.value);
-        }}
-        onKeyDown={(event) => {
-          event.key === "Enter" && checkAnswer();
-        }}
-      />
-      <button
-        onClick={() => {
-          checkAnswer();
-        }}
-      >
-        &#9658;
-      </button>
+          {/* send input */}
+          <input
+            type="text"
+            value={currentInput}
+            placeholder="input"
+            onChange={(event) => {
+              setCurrentInput(event.target.value);
+            }}
+            onKeyDown={(event) => {
+              event.key === "Enter" && sendInput();
+            }}
+          />
+          <button
+            onClick={() => {
+              sendInput();
+              resetTimer();
+            }}
+          >
+            &#9658;
+          </button>
+          {/* send answer */}
+          <input
+            type="text"
+            value={currentAnswer}
+            placeholder="answer"
+            onChange={(event) => {
+              setCurrentAnswer(event.target.value);
+            }}
+            onKeyDown={(event) => {
+              event.key === "Enter" && checkAnswer();
+            }}
+          />
+          <button
+            onClick={() => {
+              checkAnswer();
+              resetTimer();
+            }}
+          >
+            &#9658;
+          </button>
+        </div>
+      )}
     </div>
   );
 }

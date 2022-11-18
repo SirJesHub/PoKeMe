@@ -22,7 +22,20 @@ io.on("connection", (socket) => {
   socket.on("join_room", (data) => {
     socket.join(data);
     console.log(`User with ID: ${socket.id}joined room: ${data}`);
+    console.log(
+      `room id: ${data} + ${io.sockets.adapter.rooms.get(data).size}`
+    );
+    socket
+      .to(data)
+      .emit("player_count", io.sockets.adapter.rooms.get(data).size);
   });
+
+  // socket.on("req_player_count", (data) => {
+  //   console.log(`player count + ${io.sockets.adapter.rooms.get(data).size}`);
+  //   socket
+  //     .to()
+  //     .emit("send_player_count", io.sockets.adapter.rooms.get(data).size);
+  // });
 
   socket.on("send_input", (data) => {
     console.log(`recieve input = ${data.input}`);
