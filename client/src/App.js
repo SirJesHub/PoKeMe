@@ -1,10 +1,8 @@
 import "./App.css";
 import io from "socket.io-client";
 import { useState } from "react";
-
 import Game from "./Game";
 import { W } from "./utils/constants";
-
 
 const socket = io.connect("http://localhost:3001");
 
@@ -16,9 +14,12 @@ function App() {
   const joinRoom = () => {
     if (username !== "" && room !== "") {
       socket.emit("join_room", room);
+      // roomSize = io.sockets.adapter.rooms.get(room).size;
+      // console.log(`hi`);
       setGameReady(true);
     }
   };
+
   return (
     <div className="App">
       {!gameReady ? (
