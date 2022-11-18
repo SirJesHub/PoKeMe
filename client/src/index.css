@@ -1,4 +1,6 @@
 @font-face {
-    font-family: 'MesseDuesseldorf-O1d3';
-    src: local('MesseDuesseldorf-O1d3'), url(./fonts/MesseDuesseldorf-O1d3.ttf) format('truetype');
-  }
+  font-family: "MesseDuesseldorf";
+  src: local("MesseDuesseldorf"),
+    url(./fonts/MesseDuesseldorf/MesseDuesseldorf.ttf) format("truetype");
+  font-weight: bold;
+}

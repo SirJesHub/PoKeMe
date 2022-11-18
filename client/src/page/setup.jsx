@@ -11,6 +11,7 @@ const Setup = () => {
   const [name, setName] = useState("");
   const navigate = useNavigate();
   const { socket } = useSocket();
+
   const handleJoinRoom = () => {
     if (!name) return;
     navigate("/joinRoom");
@@ -25,7 +26,7 @@ const Setup = () => {
   return (
     <VStack>
       <GameLogo />
-      <HStack>
+      <HStack style={{ justifyContent: "space-around" }}>
         <VStack gap={"16px"}>
           <Button size="small">Name</Button>
           <TextInput value={name} onChange={setName} />

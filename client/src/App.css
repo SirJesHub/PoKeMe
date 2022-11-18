@@ -47,7 +47,7 @@ body {
   top: 50%;
   left: 50%;
   z-index: 2;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
 
 .gameBG {
@@ -56,7 +56,7 @@ body {
   top: 50%;
   left: 50%;
   z-index: 1;
-  transform: translate(-50%,-60%);
+  transform: translate(-50%, -60%);
 }
 
 .input {
@@ -67,12 +67,11 @@ body {
   top: 52%;
   left: 43%;
   z-index: 3;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
 
 .input::placeholder {
   font-family: Arial;
-
 }
 
 .button2 {
@@ -82,10 +81,11 @@ body {
   top: 52%;
   left: 43%;
   z-index: 3;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
 
-textarea:focus, input:focus{
+textarea:focus,
+input:focus {
   outline: none;
 }
 
@@ -93,7 +93,7 @@ textarea:focus, input:focus{
   height: 2%;
   border-color: transparent;
   z-index: 3;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
 
 .button3-text {
@@ -103,6 +103,5 @@ textarea:focus, input:focus{
   top: 42.6%;
   left: 43%;
   z-index: 4;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
 }
-

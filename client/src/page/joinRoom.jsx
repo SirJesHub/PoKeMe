@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Board from "../components/Board";
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
 import VStack from "../components/VStack";
@@ -20,9 +21,10 @@ const JoinRoom = () => {
   };
 
   return (
-    <VStack>
+    <VStack gap={"40px"}>
       <TextInput value={roomId} onChange={setRoomId} />
       <Button onClick={() => handleSumbit()}>Join Room</Button>
+      <Board size="big"></Board>
     </VStack>
   );
 };

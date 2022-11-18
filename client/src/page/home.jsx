@@ -7,7 +7,7 @@ import VStack from "../components/VStack";
 const Home = () => {
   const navigate = useNavigate();
   return (
-    <VStack gap={"8px"}>
+    <VStack gap={"20px"}>
       <GameLogo />
       <Button
         size={"small"}

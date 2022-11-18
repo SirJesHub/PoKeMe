@@ -9,10 +9,14 @@ const Button = ({ children, size, onClick }) => {
         margin: "0px",
         border: "none",
         backgroundColor: "transparent",
+        cursor: "pointer",
       }}
       onClick={onClick}
     >
-      <img src={size == "small" ? BUTTON_SMALL : BUTTON_BIG} />
+      <img
+        src={size == "small" ? BUTTON_SMALL : BUTTON_BIG}
+        style={{ width: "75%" }}
+      />
       <div
         style={{
           position: "absolute",
