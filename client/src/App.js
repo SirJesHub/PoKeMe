@@ -2,50 +2,32 @@ import "./App.css";
 import io from "socket.io-client";
 import { useState } from "react";
 import Game from "./Game";
-import { W } from "./utils/constants";
+
+import { SocketProvider } from "./services/socket-io";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import JoinRoom from "./pages/joinRoom";
+import WaitingRoom from "./pages/waitingRoom";
+import CharacterSelect from "./pages/characterSelect";
+import RoomFull from "./pages/roomFull";
+import GameRoom from "./pages/GameRoom";
 
 const socket = io.connect("http://localhost:3001");
 
 function App() {
-  const [username, setUsername] = useState("");
-  const [room, setRoom] = useState("");
-  const [gameReady, setGameReady] = useState(false);
-
-  const joinRoom = () => {
-    if (username !== "" && room !== "") {
-      socket.emit("join_room", room);
-      // roomSize = io.sockets.adapter.rooms.get(room).size;
-      // console.log(`hi`);
-      setGameReady(true);
-    }
-  };
-
   return (
-    <div className="App">
-      {!gameReady ? (
-        <div>
-          <h1>PoKeME</h1>
-          <h3> Join room </h3>
-          <input
-            type="text"
-            placeholder="name..."
-            onChange={(event) => {
-              setUsername(event.target.value);
-            }}
-          />
-          <input
-            type="text"
-            placeholder="Room ID"
-            onChange={(event) => {
-              setRoom(event.target.value);
-            }}
-          />
-          <button onClick={joinRoom}>Join A Room</button>
-        </div>
-      ) : (
-        <Game socket={socket} username={username} room={room} />
-      )}
-    </div>
+    <SocketProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/">
+            <Route index element={<JoinRoom />} />
+            <Route path="waitingRoom" element={<WaitingRoom />} />
+            <Route path="characterSelect" element={<CharacterSelect />} />
+            <Route path="gameRoom" element={<GameRoom />} />
+            <Route path="roomFull" element={<RoomFull />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </SocketProvider>
   );
 }
 

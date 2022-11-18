@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Timer from "./utils/timer";
 import { io } from "socket.io-client";
 
 function Game({ socket, username, room }) {
@@ -6,7 +7,9 @@ function Game({ socket, username, room }) {
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [inputList, setInputList] = useState([]);
   const [score, setScore] = useState(0);
-  const [waitForP2, setwaitForP2] = useState(false);
+  const [displayWaitingScreen, setDisplayWaitingScreen] = useState(true);
+  const [playerCount, setPlayerCount] = useState(0);
+  const [round, setRound] = useState(0); //not used
 
   //send input
   const sendInput = async () => {
@@ -49,24 +52,10 @@ function Game({ socket, username, room }) {
   //   await socket.emit("req_player_count", room);
   //   socket.on("send_player_count", (data) => {
   //     if (data > 1) {
-  //       setwaitForP2(true);
+  //       setDisplayWaitingScreen(false);
   //     }
   //   });
   // };
-  useEffect(() => {
-    socket.on("player_count", (data) => {
-      if (data > 1) {
-        setwaitForP2(true);
-      }
-    });
-  });
-
-  useEffect(() => {
-    socket.on("recieve_input", (data) => {
-      setInputList((list) => [...list, data.input]);
-      resetTimer();
-    });
-  });
 
   //timer
   const startingSecond = 20; //change this to change timer
@@ -82,20 +71,48 @@ function Game({ socket, username, room }) {
     if (time < 0) clearInterval(refreshIntervalId);
   }
 
-  function resetTimer() {
-    time = startingSecond;
-  }
+  // function resetTimer() {
+  //   time = startingSecond;
+  // }
   //timer finish
+
+  const goNextRound = () => {
+    setRound((round) => round + 1);
+  };
+
+  useEffect(() => {
+    socket.on("player_count", (data) => {
+      if (data === 2) {
+        setDisplayWaitingScreen(false);
+      }
+    });
+
+    socket.on("send_player_count", (playerCount) =>
+      setPlayerCount(playerCount)
+    );
+
+    socket.on("recieve_input", (data) => {
+      setInputList((list) => [...list, data.input]);
+      // resetTimer();
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    if (playerCount === 2) setDisplayWaitingScreen(false);
+  }, [playerCount]);
 
   return (
     <div>
-      {!waitForP2 ? (
+      {displayWaitingScreen ? (
         <div>
           <h1>Waiting for Player 2</h1>
           <button onClick={() => {}}></button>
+          <h3>{playerCount}</h3>
         </div>
       ) : (
         <div>
+          <Timer max={20} />
+          <br />
           <h1>Score = {score}</h1>
           <h1 id="countdown"></h1>
 
@@ -114,7 +131,7 @@ function Game({ socket, username, room }) {
           <button
             onClick={() => {
               sendInput();
-              resetTimer();
+              // resetTimer();
             }}
           >
             &#9658;
@@ -134,11 +151,12 @@ function Game({ socket, username, room }) {
           <button
             onClick={() => {
               checkAnswer();
-              resetTimer();
+              // resetTimer();
             }}
           >
             &#9658;
           </button>
+          <button onClick={goNextRound}>{round}</button>
         </div>
       )}
     </div>
