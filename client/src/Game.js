@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Timer from "./utils/timer";
 import { io } from "socket.io-client";
 
 function Game({ socket, username, room }) {
@@ -8,6 +9,7 @@ function Game({ socket, username, room }) {
   const [score, setScore] = useState(0);
   const [displayWaitingScreen, setDisplayWaitingScreen] = useState(true);
   const [playerCount, setPlayerCount] = useState(0);
+  const [round, setRound] = useState(0); //not used
 
   //send input
   const sendInput = async () => {
@@ -54,8 +56,8 @@ function Game({ socket, username, room }) {
   //     }
   //   });
   // };
-  //timer
 
+  //timer
   const startingSecond = 20; //change this to change timer
   let time = startingSecond;
   let refreshIntervalId = setInterval(updateCountdown, 1000);
@@ -69,10 +71,14 @@ function Game({ socket, username, room }) {
     if (time < 0) clearInterval(refreshIntervalId);
   }
 
-  function resetTimer() {
-    time = startingSecond;
-  }
+  // function resetTimer() {
+  //   time = startingSecond;
+  // }
   //timer finish
+
+  const goNextRound = () => {
+    setRound((round) => round + 1);
+  };
 
   useEffect(() => {
     socket.on("player_count", (data) => {
@@ -81,11 +87,13 @@ function Game({ socket, username, room }) {
       }
     });
 
-    socket.on("test", (playerCount) => setPlayerCount(playerCount));
+    socket.on("send_player_count", (playerCount) =>
+      setPlayerCount(playerCount)
+    );
 
     socket.on("recieve_input", (data) => {
       setInputList((list) => [...list, data.input]);
-      resetTimer();
+      // resetTimer();
     });
   }, [socket]);
 
@@ -103,6 +111,8 @@ function Game({ socket, username, room }) {
         </div>
       ) : (
         <div>
+          <Timer max={20} />
+          <br />
           <h1>Score = {score}</h1>
           <h1 id="countdown"></h1>
 
@@ -121,7 +131,7 @@ function Game({ socket, username, room }) {
           <button
             onClick={() => {
               sendInput();
-              resetTimer();
+              // resetTimer();
             }}
           >
             &#9658;
@@ -141,11 +151,12 @@ function Game({ socket, username, room }) {
           <button
             onClick={() => {
               checkAnswer();
-              resetTimer();
+              // resetTimer();
             }}
           >
             &#9658;
           </button>
+          <button onClick={goNextRound}>{round}</button>
         </div>
       )}
     </div>

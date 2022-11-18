@@ -27,7 +27,7 @@ io.on("connection", (socket) => {
     );
     socket.server
       .in(roomId)
-      .emit("test", io.sockets.adapter.rooms.get(roomId).size);
+      .emit("send_player_count", io.sockets.adapter.rooms.get(roomId).size);
   });
 
   // socket.on("req_player_count", (data) => {
