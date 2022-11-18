@@ -40,6 +40,9 @@ io.on("connection", (socket) => {
 
     if (roomSize == 2) {
       socket.nsp.to(data).emit("ready_for_char");
+      socket.nsp.to(data).emit("send_player_count", roomSize);
+    } else if (roomSize > 2) {
+      io.to(socket.id).emit("room_full");
     }
   });
 
@@ -54,9 +57,9 @@ io.on("connection", (socket) => {
 
   socket.on("select_char", (charId) => {
     const playerId = socket.id;
-    const roomId = player[playerId].room;
+    const roomId = player[playerId]?.room;
 
-    player[socket.id].char = charId;
+    player[playerId].char = charId;
 
     const room = rooms[roomId];
 
@@ -72,13 +75,32 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("get_both_charID", () => {
+    const playerId = socket.id;
+    const roomId = player[playerId]?.room;
+    const room = rooms[roomId];
+    let myCharID = undefined;
+    let otherCharID = undefined;
+
+    for (const pid of room?.players?.values()) {
+      if (pid == playerId) {
+        myCharID = player[pid].char;
+      } else {
+        otherCharID = player[pid].char;
+      }
+    }
+    socket.nsp
+      .to(playerId)
+      .emit("get_both_charID_response", { myCharID, otherCharID });
+  });
+
   socket.on("disconnect", () => {
     console.log(`User disconencted: ${socket.id}`);
     const pid = socket.id;
     // clear user data
     player[pid] = undefined;
     for (const roomId of Object.keys(rooms)) {
-      rooms[roomId].player.delete(pid);
+      rooms[roomId]?.player?.delete(pid);
     }
   });
 });

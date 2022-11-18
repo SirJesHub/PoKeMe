@@ -12,6 +12,11 @@ const Setup = () => {
   const navigate = useNavigate();
   const { socket } = useSocket();
 
+  socket.on("room_full", () => {
+    navigate("/roomFull");
+    socket.disconnect();
+  });
+
   const handleJoinRoom = () => {
     if (!name) return;
     navigate("/joinRoom");
@@ -19,8 +24,9 @@ const Setup = () => {
 
   const handleCreateRoom = () => {
     if (!name) return;
-    socket.emit("join_room", "123456");
-    navigate("/waitingRoom");
+    const roomCode = Math.floor(Math.random() * 1000 + 1);
+    socket.emit("join_room", `${roomCode}`);
+    navigate({ pathname: "/waitingRoom", search: `?roomID=${roomCode}` });
   };
 
   return (
@@ -41,3 +47,4 @@ const Setup = () => {
 };
 
 export default Setup;
+//export const roomCode = roomCode;

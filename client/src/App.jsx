@@ -16,6 +16,7 @@ import JoinRoom from "./page/joinRoom";
 import CharSel from "./page/charSel";
 import WaitingRoom from "./page/waitingRoom";
 import GameRoom from "./page/gameRoom";
+import RoomFull from "./page/roomFull";
 
 // const socket = io.connect("http://localhost:3001");
 
@@ -43,6 +44,7 @@ function App() {
             <Route path={"charSel"} element={<CharSel />} />
             <Route path={"waitingRoom"} element={<WaitingRoom />} />
             <Route path={"gameRoom"} element={<GameRoom />} />
+            <Route path="roomFull" element={<RoomFull />} />
           </Route>
         </Routes>
       </BrowserRouter>
