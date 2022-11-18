@@ -19,15 +19,15 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log(`User conencted: ${socket.id}`);
 
-  socket.on("join_room", (data) => {
-    socket.join(data);
-    console.log(`User with ID: ${socket.id}joined room: ${data}`);
+  socket.on("join_room", (roomId) => {
+    socket.join(roomId);
+    console.log(`User with ID: ${socket.id} joined room: ${roomId}`);
     console.log(
-      `room id: ${data} + ${io.sockets.adapter.rooms.get(data).size}`
+      `room id: ${roomId} + ${io.sockets.adapter.rooms.get(roomId).size}`
     );
-    socket
-      .to(data)
-      .emit("player_count", io.sockets.adapter.rooms.get(data).size);
+    socket.server
+      .in(roomId)
+      .emit("send_player_count", io.sockets.adapter.rooms.get(roomId).size);
   });
 
   // socket.on("req_player_count", (data) => {
