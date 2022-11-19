@@ -27,3 +27,12 @@ export const SocketProvider = ({ children }) => {
 };
 
 export const useSocket = () => useContext(SocketContext);
+
+export const socketRequest = (socket, emitReq, onResTopic) => {
+  return new Promise((resolve) => {
+    socket.emit(...emitReq);
+    socket.on(onResTopic, (data) => {
+      resolve(data);
+    });
+  });
+};

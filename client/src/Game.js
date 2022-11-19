@@ -103,62 +103,49 @@ function Game({ socket, username, room }) {
 
   return (
     <div>
-      {displayWaitingScreen ? (
-        <div>
-          <h1>Waiting for Player 2</h1>
-          <button onClick={() => {}}></button>
-          <h3>{playerCount}</h3>
-        </div>
-      ) : (
-        <div>
-          <Timer max={20} />
-          <br />
-          <h1>Score = {score}</h1>
-          <h1 id="countdown"></h1>
+      <div>
+        <body></body>
 
-          {/* send input */}
-          <input
-            type="text"
-            value={currentInput}
-            placeholder="input"
-            onChange={(event) => {
-              setCurrentInput(event.target.value);
-            }}
-            onKeyDown={(event) => {
-              event.key === "Enter" && sendInput();
-            }}
-          />
-          <button
-            onClick={() => {
-              sendInput();
-              // resetTimer();
-            }}
-          >
-            &#9658;
-          </button>
-          {/* send answer */}
-          <input
-            type="text"
-            value={currentAnswer}
-            placeholder="answer"
-            onChange={(event) => {
-              setCurrentAnswer(event.target.value);
-            }}
-            onKeyDown={(event) => {
-              event.key === "Enter" && checkAnswer();
-            }}
-          />
-          <button
-            onClick={() => {
-              checkAnswer();
-              // resetTimer();
-            }}
-          >
-            &#9658;
-          </button>
-          <button onClick={goNextRound}>{round}</button>
-        </div>
-      )}
+        <h1>Score = {score}</h1>
+        {/* send input */}
+        <input
+          type="text"
+          value={currentInput}
+          placeholder="input"
+          onChange={(event) => {
+            setCurrentInput(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            event.key === "Enter" && sendInput();
+          }}
+        />
+        <button
+          onClick={() => {
+            sendInput();
+          }}
+        >
+          &#9658;
+        </button>
+        {/* send answer */}
+        <input
+          type="text"
+          value={currentAnswer}
+          placeholder="answer"
+          onChange={(event) => {
+            setCurrentAnswer(event.target.value);
+          }}
+          onKeyDown={(event) => {
+            event.key === "Enter" && checkAnswer();
+          }}
+        />
+        <button
+          onClick={() => {
+            checkAnswer();
+          }}
+        >
+          &#9658;
+        </button>
+      </div>
     </div>
   );
 }
