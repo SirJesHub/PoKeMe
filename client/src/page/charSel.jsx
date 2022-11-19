@@ -28,6 +28,7 @@ const CharSel = () => {
   return !isCharSel ? (
     <VStack>
       <GameLogo />
+
       <HStack>
         <VStack gap={"16px"}>
           <Button

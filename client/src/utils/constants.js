@@ -4,7 +4,7 @@ export const PICKACHU3 = "/pickachuSpirtes/Pickachu3.svg";
 export const PICKACHU4 = "/pickachuSpirtes/Pickachu4.svg";
 export const PICKACHU5 = "/pickachuSpirtes/Pickachu5.svg";
 export const PICKACHU6 = "/pickachuSpirtes/Pickachu6.svg";
-export const PIKACHUGIF = "/pickachuSpirtes/PickachuGIF.gif";
+export const PIKACHUGIF = "/pickachuSpirtes/PikachuGIF.gif";
 
 // import { CHARMANDER6 } from "./utils/constants";
 export const CHARMANDER1 = "/charmanderSprites/Charmander1.svg";
@@ -39,7 +39,8 @@ export const BG = "bg/Bg.svg";
 export const BUTTON2 = "button/button2.svg";
 export const BUTTON_BIG = "button/button3.svg";
 export const BUTTON_SMALL = "button/button4.svg";
-export const BOARD_BIG = "button/bigBoard.svg";
-export const BOARD_SMALL = "button/smallBoard.svg";
+export const BOARD_BIG = "board/bigBoard.svg";
+export const BOARD_SMALL = "board/smallBoard.png";
+export const COPY = "button/copy.png";
 
 export const GAME_LOGO = "logoBig.svg";

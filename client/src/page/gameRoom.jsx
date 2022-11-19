@@ -7,11 +7,14 @@ import VStack from "../components/VStack";
 import Player2Char from "../components/Player2Char";
 import HStack from "../components/HStack";
 import GameLogo from "../components/GameLogo";
+import { BOARD_SMALL } from "../utils/constants";
+import Board from "../components/Board";
 
 const GameRoom = () => {
   const { socket } = useSocket();
   const [myCharId, setMyCharId] = useState();
   const [otherCharId, setOtherCharId] = useState();
+  const [isTurn, setIsTurn] = useState(false);
 
   useEffect(() => {
     socketRequest(socket, ["get_both_charID"], "get_both_charID_response").then(
@@ -26,10 +29,13 @@ const GameRoom = () => {
 
   console.log("other", otherCharId);
 
-  return (
+  return !isTurn ? (
     <VStack>
-      <GameLogo />
-      <HStack style={{ justifyContent: "space-around" }}>
+      <HStack>
+        <GameLogo />
+      </HStack>
+
+      <HStack>
         <VStack gap={"16px"}>
           <Player1Char size={myCharId}></Player1Char>
         </VStack>
@@ -37,7 +43,12 @@ const GameRoom = () => {
           <Player2Char size={otherCharId}></Player2Char>
         </VStack>
       </HStack>
+      <HStack>
+        <Board size="small"></Board>
+      </HStack>
     </VStack>
+  ) : (
+    <div></div>
   );
 };
 

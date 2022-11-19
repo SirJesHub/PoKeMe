@@ -7,9 +7,6 @@ const Board = ({ childern, size }) => {
       style={{
         width: "70%",
         position: "absolute",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
         zIndex: "-4",
       }}
     />
