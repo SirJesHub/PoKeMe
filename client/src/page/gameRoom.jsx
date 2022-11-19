@@ -41,14 +41,30 @@ const GameRoom = () => {
   console.log("other", otherCharId);
 
   return !isTurn ? (
+    // <VStack>
+    //   <HStack>
+    //     <GameLogo />
+    //   </HStack>
 
-<<<<<<< HEAD
+    //   <HStack>
+    //     <VStack gap={"16px"}>
+    //       <Player1Char size={myCharId}></Player1Char>
+    //     </VStack>
+    //     <VStack gap={"16px"}>
+    //       <Player2Char size={otherCharId}></Player2Char>
+    //     </VStack>
+    //   </HStack>
+    //   <HStack>
+    //     <Board size="small"></Board>
+    //   </HStack>
+    // </VStack>
+    <div>
+      <p></p>
+    </div>
   ) : (
     <div>
       <p>hello</p>
     </div>
-=======
->>>>>>> db3344bf48023bb812f0d4c99e7656d55c4c8da1
   );
 };
 
