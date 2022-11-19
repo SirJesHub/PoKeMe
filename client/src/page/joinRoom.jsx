@@ -15,7 +15,10 @@ const JoinRoom = () => {
   const name = searchParams.get("name");
 
   socket.on("ready_for_char", () => {
-    navigate("/charSel");
+    navigate({
+      pathname: "/charSel",
+      search: `?roomID=${roomId}&name=${name}`,
+    });
   });
 
   const handleSumbit = () => {

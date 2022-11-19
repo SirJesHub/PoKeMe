@@ -14,7 +14,10 @@ const WaitingRoom = () => {
   const name = searchParams.get("name");
 
   socket.on("ready_for_char", () => {
-    navigate("/charSel");
+    navigate({
+      pathname: "/charSel",
+      search: `?roomID=${roomCode}&name=${name}`,
+    });
   });
 
   //let x = Math.floor((Math.random() * 1000) + 1);
