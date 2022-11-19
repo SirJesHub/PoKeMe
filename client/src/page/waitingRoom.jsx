@@ -11,6 +11,7 @@ const WaitingRoom = () => {
   const { socket } = useSocket();
   const [searchParams] = useSearchParams();
   const roomCode = searchParams.get("roomID");
+  const name = searchParams.get("name");
 
   socket.on("ready_for_char", () => {
     navigate("/charSel");
@@ -20,13 +21,14 @@ const WaitingRoom = () => {
 
   return (
     <VStack gap={"40px"}>
-      <h1
+      <p
         style={{
           fontFamily: "Arial",
-          fontSize: "30px",
+          fontSize: "20px",
           textAlign: "center",
         }}
       >
+        Welcome {name} <br />
         {roomCode}
         <button
           onClick={() => {
@@ -47,7 +49,7 @@ const WaitingRoom = () => {
         <br />
         Waiting For <br />
         Player 2
-      </h1>
+      </p>
       <Board size="big"></Board>
     </VStack>
   );

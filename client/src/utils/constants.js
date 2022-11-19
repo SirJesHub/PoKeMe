@@ -44,3 +44,4 @@ export const BOARD_SMALL = "board/smallBoard.png";
 export const COPY = "button/copy.png";
 
 export const GAME_LOGO = "logoBig.svg";
+export let AUDIO = "bg/fart-03.mp3";

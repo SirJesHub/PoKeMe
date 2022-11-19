@@ -1,5 +1,12 @@
 import { BUTTON2, BUTTON_BIG, BUTTON_SMALL } from "../../utils/constants";
 
+let audio = new Audio("bg/fart-03.mp3");
+
+const start = () => {
+  //console.log("playsound");
+  audio.play();
+};
+
 const Button = ({ children, size, onClick }) => {
   return (
     <button
@@ -11,7 +18,10 @@ const Button = ({ children, size, onClick }) => {
         backgroundColor: "transparent",
         cursor: "pointer",
       }}
-      onClick={onClick}
+      onClick={() => {
+        start();
+        onClick(); //Start the audio when button is clicked
+      }}
     >
       <img
         src={size == "small" ? BUTTON_SMALL : BUTTON_BIG}

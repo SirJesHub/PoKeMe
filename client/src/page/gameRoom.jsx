@@ -9,12 +9,18 @@ import HStack from "../components/HStack";
 import GameLogo from "../components/GameLogo";
 import { BOARD_SMALL } from "../utils/constants";
 import Board from "../components/Board";
+import Timer from "../components/Timer";
 
 const GameRoom = () => {
   const { socket } = useSocket();
   const [myCharId, setMyCharId] = useState();
   const [otherCharId, setOtherCharId] = useState();
+<<<<<<< HEAD
   const [isTurn, setIsTurn] = useState(true);
+=======
+  const [isTurn, setIsTurn] = useState(false);
+  let turn = 0;
+>>>>>>> db3344bf48023bb812f0d4c99e7656d55c4c8da1
 
   useEffect(() => {
     socketRequest(socket, ["get_both_charID"], "get_both_charID_response").then(
@@ -25,6 +31,15 @@ const GameRoom = () => {
     );
   }, []);
 
+  socket.on("your_turn", (data) => {
+    turn = turn + 1;
+  });
+
+  //when timer ends your turn
+  socket.emit("turn_end", turn);
+
+  socket.on("game_ends");
+
   console.log("my", myCharId);
 
   console.log("other", otherCharId);
@@ -33,6 +48,23 @@ const GameRoom = () => {
     <VStack>
       <HStack>
         <GameLogo />
+        <Timer max={20} />
+      </HStack>
+
+      <HStack>
+        <Player1Char size={myCharId}></Player1Char>
+
+        <Player2Char size={otherCharId}></Player2Char>
+      </HStack>
+      <HStack>
+        <Board size="small"></Board>
+      </HStack>
+    </VStack>
+  ) : (
+    <VStack>
+      <HStack>
+        <GameLogo />
+        <Timer max={20} />
       </HStack>
 
       <HStack>
@@ -44,13 +76,16 @@ const GameRoom = () => {
         </VStack>
       </HStack>
       <HStack>
-        <Board size="small"></Board>
+        <Board size="small" text="yes"></Board>
       </HStack>
     </VStack>
+<<<<<<< HEAD
   ) : (
     <div>
       <p>hello</p>
     </div>
+=======
+>>>>>>> db3344bf48023bb812f0d4c99e7656d55c4c8da1
   );
 };
 
