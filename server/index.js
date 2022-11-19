@@ -60,6 +60,7 @@ io.on("connection", (socket) => {
 
   socket.on("send_answer", (data) => {
     console.log(`recieve answer = ${data.answer}`);
+    socket.to(data.room).emit("recieve_answer", data);
   });
 
   socket.on("set_ready", (data) => {
