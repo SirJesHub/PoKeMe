@@ -14,6 +14,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 const GameRoom = () => {
   const { socket } = useSocket();
+  const navigate = useNavigate();
   const [myCharId, setMyCharId] = useState();
   const [otherCharId, setOtherCharId] = useState();
   const [isReady, setIsReady] = useState(false);
@@ -34,6 +35,7 @@ const GameRoom = () => {
         room: room,
         author: username,
         input: currentInput,
+        round: round,
       };
 
       await socket.emit("send_input", inputData);
@@ -43,6 +45,8 @@ const GameRoom = () => {
   };
 
   socket.on("recieve_input", (data) => {
+    console.log("input recieved" + data.round);
+    // setRound((prevRound) => prevRound + 1);
     setInputList((list) => [...list, data.input]);
   });
 
@@ -52,6 +56,7 @@ const GameRoom = () => {
         room: room,
         author: username,
         answer: currentAnswer,
+        round: round,
       };
 
       if (answerData.answer === inputList[inputList.length - 1]) {
@@ -63,6 +68,11 @@ const GameRoom = () => {
       setCurrentAnswer("");
     }
   };
+
+  socket.on("recieve_answer", (data) => {
+    console.log("answer recieved" + data.round);
+    // setRound((prevRound) => prevRound + 1);
+  });
 
   const begin = async () => {
     var setPlayer1 = Math.random() < 0.5;
@@ -84,6 +94,9 @@ const GameRoom = () => {
   });
 
   const switchSide = async () => {
+    if (round > 3) {
+      endGame();
+    }
     setIsTurn(!isTurn);
     const turn = {
       room: room,
@@ -97,11 +110,20 @@ const GameRoom = () => {
   socket.on("switching_side", (data) => {
     setIsTurn((isTurn) => data.isTurn);
     setIsTyping(!isTyping);
-    goNextRound();
   });
 
   const goNextRound = () => {
+    console.log("going next round: " + round);
     setRound((round) => round + 1);
+  };
+
+  const endGame = () => {
+    //use socket request to compare score then set victory to true if win and false if lose
+    var victory = true;
+    navigate({
+      pathname: "/endScreen",
+      search: `?roomID=${room}&name=${username}&${victory}`,
+    });
   };
 
   useEffect(() => {
@@ -142,6 +164,7 @@ const GameRoom = () => {
       <div>
         <p> I am attacking</p>
         <p>Score = {score}</p>
+        <p>Round Counter = {round}</p>
         <input
           type="text"
           value={currentInput}
@@ -155,6 +178,7 @@ const GameRoom = () => {
         />
         <button
           onClick={() => {
+            goNextRound();
             switchSide();
             sendInput();
           }}
@@ -166,12 +190,14 @@ const GameRoom = () => {
       <div>
         <p>I am waiting for attacker</p>
         <p>Score = {score}</p>
+        <p>Round Counter = {round}</p>
       </div>
     )
   ) : isTyping ? (
     <div>
       <p>I am answering</p>
       <p>Score = {score}</p>
+      <p>Round Counter = {round}</p>
       <input
         type="text"
         value={currentAnswer}
@@ -185,18 +211,19 @@ const GameRoom = () => {
       />
       <button
         onClick={() => {
+          goNextRound();
           switchSide();
           checkAnswer();
         }}
       >
         &#9658;
       </button>
-      <button onClick={goNextRound}>{round}</button>
     </div>
   ) : (
     <div>
       <p>i am waiting for answer</p>
       <p>Score = {score}</p>
+      <p>Round Counter = {round}</p>
     </div>
   );
   // return !isTurn ? (
