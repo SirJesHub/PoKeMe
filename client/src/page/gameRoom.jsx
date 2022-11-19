@@ -14,7 +14,7 @@ const GameRoom = () => {
   const { socket } = useSocket();
   const [myCharId, setMyCharId] = useState();
   const [otherCharId, setOtherCharId] = useState();
-  const [isTurn, setIsTurn] = useState(false);
+  const [isTurn, setIsTurn] = useState(true);
 
   useEffect(() => {
     socketRequest(socket, ["get_both_charID"], "get_both_charID_response").then(
@@ -48,7 +48,9 @@ const GameRoom = () => {
       </HStack>
     </VStack>
   ) : (
-    <div></div>
+    <div>
+      <p>hello</p>
+    </div>
   );
 };
 

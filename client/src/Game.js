@@ -107,11 +107,6 @@ function Game({ socket, username, room }) {
         <body></body>
 
         <h1>Score = {score}</h1>
-        <h1>Time = {counter} </h1>
-        <div>
-          Registration closes in <span id="time">05:00</span> minutes!
-        </div>
-
         {/* send input */}
         <input
           type="text"
@@ -127,7 +122,6 @@ function Game({ socket, username, room }) {
         <button
           onClick={() => {
             sendInput();
-            startTimer();
           }}
         >
           &#9658;
