@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import VStack from "../components/VStack";
 import PikachuChar from "../components/PikachuChar";
 import BulbaChar from "../components/BulbasaurChar";
+import Board from "../components/Board";
 
 const Home = () => {
   const navigate = useNavigate();

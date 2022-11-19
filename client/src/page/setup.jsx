@@ -20,13 +20,20 @@ const Setup = () => {
   const handleJoinRoom = () => {
     if (!name) return;
     navigate("/joinRoom");
+    navigate({
+      pathname: "/joinRoom",
+      search: `?name=${name}`,
+    });
   };
 
   const handleCreateRoom = () => {
     if (!name) return;
     const roomCode = Math.floor(Math.random() * 1000 + 1);
     socket.emit("join_room", `${roomCode}`);
-    navigate({ pathname: "/waitingRoom", search: `?roomID=${roomCode}` });
+    navigate({
+      pathname: "/waitingRoom",
+      search: `?roomID=${roomCode}&name=${name}`,
+    });
   };
 
   return (
