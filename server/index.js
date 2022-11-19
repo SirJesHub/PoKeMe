@@ -55,6 +55,11 @@ io.on("connection", (socket) => {
     console.log(`recieve answer = ${data.answer}`);
   });
 
+  socket.on("turn_end", (data) => {
+    console.log(`recieve answer = ${data.answer}`);
+    socket.nsp.to(data).emit("your turn", data);
+  });
+
   socket.on("select_char", (charId) => {
     const playerId = socket.id;
     const roomId = player[playerId]?.room;

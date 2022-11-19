@@ -16,6 +16,7 @@ const TextInput = ({ value, onChange, placeholderVal }) => {
           borderColor: "transparent",
           outline: "none",
         }}
+        placeholder={placeholderVal}
       />
       <img src={BUTTON2} style={{ width: "120px" }} />
     </div>
