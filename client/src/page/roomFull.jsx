@@ -1,8 +1,22 @@
+import Board from "../components/Board";
+import VStack from "../components/VStack";
+
 const RoomFull = () => {
   return (
-    <div>
-      <h1>The specified room is full</h1>
-    </div>
+    <VStack gap={"0px"}>
+      <h1
+        style={{
+          fontFamily: "Arial",
+          fontSize: "30px",
+          textAlign: "center",
+        }}
+      >
+        <br />
+        The Room <br />
+        is FULL!
+      </h1>
+      <Board size="big"></Board>
+    </VStack>
   );
 };
 
