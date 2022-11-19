@@ -15,12 +15,8 @@ const GameRoom = () => {
   const { socket } = useSocket();
   const [myCharId, setMyCharId] = useState();
   const [otherCharId, setOtherCharId] = useState();
-<<<<<<< HEAD
   const [isTurn, setIsTurn] = useState(true);
-=======
-  const [isTurn, setIsTurn] = useState(false);
   let turn = 0;
->>>>>>> db3344bf48023bb812f0d4c99e7656d55c4c8da1
 
   useEffect(() => {
     socketRequest(socket, ["get_both_charID"], "get_both_charID_response").then(
@@ -45,40 +41,7 @@ const GameRoom = () => {
   console.log("other", otherCharId);
 
   return !isTurn ? (
-    <VStack>
-      <HStack>
-        <GameLogo />
-        <Timer max={20} />
-      </HStack>
 
-      <HStack>
-        <Player1Char size={myCharId}></Player1Char>
-
-        <Player2Char size={otherCharId}></Player2Char>
-      </HStack>
-      <HStack>
-        <Board size="small"></Board>
-      </HStack>
-    </VStack>
-  ) : (
-    <VStack>
-      <HStack>
-        <GameLogo />
-        <Timer max={20} />
-      </HStack>
-
-      <HStack>
-        <VStack gap={"16px"}>
-          <Player1Char size={myCharId}></Player1Char>
-        </VStack>
-        <VStack gap={"16px"}>
-          <Player2Char size={otherCharId}></Player2Char>
-        </VStack>
-      </HStack>
-      <HStack>
-        <Board size="small" text="yes"></Board>
-      </HStack>
-    </VStack>
 <<<<<<< HEAD
   ) : (
     <div>
