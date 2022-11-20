@@ -46,7 +46,7 @@ const GameRoom = () => {
 
   socket.on("recieve_input", (data) => {
     console.log("input recieved" + data.round);
-    // setRound((prevRound) => prevRound + 1);
+    goNextRound();
     setInputList((list) => [...list, data.input]);
   });
 
@@ -71,7 +71,7 @@ const GameRoom = () => {
 
   socket.on("recieve_answer", (data) => {
     console.log("answer recieved" + data.round);
-    // setRound((prevRound) => prevRound + 1);
+    goNextRound();
   });
 
   const begin = async () => {
@@ -119,7 +119,7 @@ const GameRoom = () => {
 
   const endGame = () => {
     //use socket request to compare score then set victory to true if win and false if lose
-    var victory = true;
+    let victory = true;
     navigate({
       pathname: "/endScreen",
       search: `?roomID=${room}&name=${username}&${victory}`,
