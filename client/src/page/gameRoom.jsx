@@ -24,7 +24,7 @@ const GameRoom = () => {
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [inputList, setInputList] = useState([]);
   const [score, setScore] = useState(0);
-  const [round, setRound] = useState(0);
+  const [round, setRound] = useState(1);
   const [searchParams] = useSearchParams();
   let username = searchParams.get("name");
   let room = searchParams.get("roomID");
@@ -41,6 +41,7 @@ const GameRoom = () => {
       await socket.emit("send_input", inputData);
       setInputList((list) => [...list, inputData]);
       setCurrentInput("");
+      // await switchIsTyping();
     }
   };
 
@@ -59,13 +60,17 @@ const GameRoom = () => {
         round: round,
       };
 
-      if (answerData.answer === inputList[inputList.length - 1]) {
+      let answerMatched = answerData.answer === inputList[inputList.length - 1];
+
+      if (answerMatched) {
         console.log(`${username} has answer correctly`);
         setScore((prevscore) => prevscore + 1);
       }
 
       await socket.emit("send_answer", answerData);
       setCurrentAnswer("");
+      // await switchIsTurn();
+      return answerMatched ? score + 1 : score;
     }
   };
 
@@ -75,7 +80,7 @@ const GameRoom = () => {
   });
 
   const begin = async () => {
-    var setPlayer1 = Math.random() < 0.5;
+    let setPlayer1 = Math.random() < 0.5;
     const readyData = {
       room: room,
       author: username,
@@ -93,38 +98,92 @@ const GameRoom = () => {
     setIsReady(true);
   });
 
-  const switchSide = async () => {
-    if (round > 3) {
-      endGame();
-    }
-    setIsTurn(!isTurn);
+  const switchIsTyping = async () => {
+    await sendInput();
+    setIsTyping((currentState) => !currentState);
     const turn = {
       room: room,
       round: round,
-      isTurn: !isTurn,
+      score: score,
+      isTurn: isTurn,
       isTyping: isTyping,
     };
-    await socket.emit("switch_side", turn);
+    await socket.emit("switch_isTyping", turn);
   };
 
-  socket.on("switching_side", (data) => {
-    setIsTurn((isTurn) => data.isTurn);
-    setIsTyping(!isTyping);
+  socket.on("switching_isTyping", (data) => {
+    setIsTurn(!data.isTurn);
+    setIsTyping(data.isTyping);
   });
 
-  const goNextRound = () => {
-    console.log("going next round: " + round);
+  const switchIsTurn = async () => {
+    const tempScore = await checkAnswer();
+    if (round > 3) {
+      endGame(tempScore);
+      return;
+    }
+    setIsTurn((currentState) => !currentState);
+    const turn = {
+      room: room,
+      round: round,
+      score: score,
+      isTurn: isTurn,
+      isTyping: isTyping,
+    };
     setRound((round) => round + 1);
+    await socket.emit("switch_isTurn", turn);
   };
 
-  const endGame = () => {
-    //use socket request to compare score then set victory to true if win and false if lose
-    var victory = true;
+  socket.on("switching_isTurn", (data) => {
+    setRound((round) => (round = data.round + 1));
+    setIsTurn(data.isTurn);
+    setIsTyping(!data.isTyping);
+  });
+
+  const compareScore = (recievedScore, score) => {
+    let res;
+    if (recievedScore > score) {
+      res = "lose";
+    } else if (recievedScore === score) {
+      res = "draw";
+    } else if (recievedScore < score) {
+      res = "win";
+    }
+    return res;
+  };
+
+  const endGame = async (tempScore) => {
+    const payload = {
+      score: tempScore,
+      room: room,
+      author: username,
+    };
+    await socket.emit("end_game", payload);
+  };
+
+  socket.off("ending_game").on("ending_game", async (payload) => {
+    const recievedScore = payload.score;
+    const result = compareScore(recievedScore, score);
+    const p2Payload = {
+      score: score,
+      room: room,
+    };
+    await socket.emit("end_game_for_another", p2Payload);
     navigate({
       pathname: "/endScreen",
-      search: `?roomID=${room}&name=${username}&${victory}`,
+      search: `?roomID=${room}&name=${username}&result=${result}`,
     });
-  };
+  });
+
+  socket.on("ending_game_for_another", (payload) => {
+    const foo = score;
+    const recievedScore = payload.score;
+    const result = compareScore(recievedScore, foo);
+    navigate({
+      pathname: "/endScreen",
+      search: `?roomID=${room}&name=${username}&result=${result}`,
+    });
+  });
 
   useEffect(() => {
     socketRequest(socket, ["get_both_charID"], "get_both_charID_response").then(
@@ -164,7 +223,7 @@ const GameRoom = () => {
       <div>
         <p> I am attacking</p>
         <p>Score = {score}</p>
-        <p>Round Counter = {round}</p>
+        <p>Round {round}</p>
         <input
           type="text"
           value={currentInput}
@@ -177,10 +236,9 @@ const GameRoom = () => {
           }}
         />
         <button
-          onClick={() => {
-            goNextRound();
-            switchSide();
-            sendInput();
+          onClick={async () => {
+            // await sendInput();
+            await switchIsTyping();
           }}
         >
           &#9658;
@@ -188,16 +246,16 @@ const GameRoom = () => {
       </div>
     ) : (
       <div>
-        <p>I am waiting for attacker</p>
+        <p>I am waiting for answer</p>
         <p>Score = {score}</p>
-        <p>Round Counter = {round}</p>
+        <p>Round {round}</p>
       </div>
     )
   ) : isTyping ? (
     <div>
       <p>I am answering</p>
       <p>Score = {score}</p>
-      <p>Round Counter = {round}</p>
+      <p>Round {round}</p>
       <input
         type="text"
         value={currentAnswer}
@@ -210,10 +268,9 @@ const GameRoom = () => {
         }}
       />
       <button
-        onClick={() => {
-          goNextRound();
-          switchSide();
-          checkAnswer();
+        onClick={async () => {
+          // await checkAnswer();
+          await switchIsTurn();
         }}
       >
         &#9658;
@@ -221,9 +278,9 @@ const GameRoom = () => {
     </div>
   ) : (
     <div>
-      <p>i am waiting for answer</p>
+      <p>i am waiting for attacker</p>
       <p>Score = {score}</p>
-      <p>Round Counter = {round}</p>
+      <p>Round {round}</p>
     </div>
   );
   // return !isTurn ? (
