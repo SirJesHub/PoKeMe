@@ -243,6 +243,7 @@ const GameRoom = () => {
   });
 
   const switchIsTurn = async () => {
+    if (currentAnswer === "") return;
     const tempScore = await checkAnswer();
     if (round > 3) {
       endGame(tempScore);
@@ -289,13 +290,13 @@ const GameRoom = () => {
   };
 
   socket.off("ending_game").on("ending_game", async (payload) => {
-    const oppName = payload.username
+    const oppName = payload.username;
     const recievedScore = payload.score;
     const result = compareScore(recievedScore, score);
     const p2Payload = {
       score: score,
       room: room,
-      username: username
+      username: username,
     };
     await socket.emit("end_game_for_another", p2Payload);
     navigate({
@@ -305,7 +306,7 @@ const GameRoom = () => {
   });
 
   socket.on("ending_game_for_another", (payload) => {
-    const oppName = payload.username
+    const oppName = payload.username;
     const foo = score;
     const recievedScore = payload.score;
     const result = compareScore(recievedScore, foo);
@@ -313,6 +314,29 @@ const GameRoom = () => {
       pathname: "/endScreen",
       search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
     });
+  });
+
+  socket.on("restarting_game", async (data) => {
+    setCurrentInput("");
+    setScore(0);
+    setRound(1);
+    let setPlayer1;
+    if (data === "win") {
+      setPlayer1 = true;
+    } else if (data === "lose") {
+      setPlayer1 = false;
+    } else if (data === "draw") {
+      setPlayer1 = Math.random() < 0.5;
+    }
+    const readyData = {
+      room: room,
+      author: username,
+      p1: !setPlayer1,
+    };
+    await socket.emit("set_ready", readyData);
+    setIsTurn(setPlayer1);
+    setIsTyping(setPlayer1);
+    setIsReady(true);
   });
   //------------------------------------------------round logic----------------------------------------//
 

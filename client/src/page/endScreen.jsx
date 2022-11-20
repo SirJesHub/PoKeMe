@@ -23,6 +23,12 @@ const EndScreen = () => {
   const receivedScore = searchParams.get("receivedScore");
   const score = searchParams.get("score");
 
+  const startToken =
+    receivedScore === score ? "draw" : receivedScore > score ? "lose" : "win";
+
+  const anotherStartToken =
+    receivedScore === score ? "draw" : receivedScore > score ? "win" : "lose";
+
   const winRes = [
     `Congratulations! ${name}`,
     `${name}, You won!`,
@@ -48,6 +54,21 @@ const EndScreen = () => {
     `You can do it better, ${name}`,
   ];
 
+  socket.on("restart_game_for_another", () => {
+    navigate({
+      pathname: "/gameRoom",
+      search: `?roomID=${room}&name=${name}`,
+    });
+  });
+
+  const handleRestartClick = async () => {
+    await socket.emit("restart_game", { startToken, anotherStartToken, room });
+    navigate({
+      pathname: "/gameRoom",
+      search: `?roomID=${room}&name=${name}`,
+    });
+  };
+
   if (result === "win") {
     return (
       <div>
@@ -55,6 +76,7 @@ const EndScreen = () => {
           {score}:{receivedScore}
         </h1>
         <h1> {winRes[Math.floor(Math.random() * winRes.length)]}</h1>
+        <button onClick={() => handleRestartClick()}>restart</button>
       </div>
     );
   } else if (result === "draw") {
@@ -64,6 +86,7 @@ const EndScreen = () => {
           {score}:{receivedScore}
         </h1>
         <h1> {drawRes[Math.floor(Math.random() * drawRes.length)]}</h1>
+        <button onClick={() => handleRestartClick()}>restart</button>
       </div>
     );
   } else if (result === "lose") {
@@ -73,6 +96,7 @@ const EndScreen = () => {
           {score}:{receivedScore}
         </h1>
         <h1>{loseRes[Math.floor(Math.random() * loseRes.length)]}</h1>
+        <button onClick={() => handleRestartClick()}>restart</button>
       </div>
     );
   }

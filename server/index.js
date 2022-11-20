@@ -107,6 +107,12 @@ io.on("connection", (socket) => {
     socket.to(data.room).emit("ending_game_for_another", data);
   });
 
+  socket.on("restart_game", async (data) => {
+    console.log("RESTARTING game");
+    await socket.to(data.room).emit("restart_game_for_another");
+    await socket.emit("restarting_game", data.startToken); //emit to the one who click restart
+  });
+
   // socket.on("turn_end", (data) => {
   //   console.log(`recieve answer = ${data.answer}`);
   //   socket.nsp.to(data).emit("your turn", data);
