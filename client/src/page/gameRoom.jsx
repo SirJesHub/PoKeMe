@@ -11,83 +11,90 @@ import { BOARD_SMALL } from "../utils/constants";
 import Board from "../components/Board";
 import Timer2 from "../utils/timer";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { forwardRef } from "react";
+import { useImperativeHandle } from "react";
 
-function Timer({ max, switchIsTyping, switchIsTurn, switchRole }) {
-  const Ref = useRef(null);
+const Timer = forwardRef(
+  ({ max, switchIsTyping, switchIsTurn, switchRole }, ref) => {
+    const Ref = useRef(null);
+    const { socket } = useSocket();
+    const [timer, setTimer] = useState(max);
+    const [resetTimer, setResetTimer] = useState(false);
+    const [searchParams] = useSearchParams();
+    let room = searchParams.get("roomID");
 
-  const [timer, setTimer] = useState(max);
-
-  const getTimeRemaining = (e) => {
-    const total = Date.parse(e) - Date.parse(new Date());
-    const seconds = Math.floor((total / 1000) % 60);
-    return {
-      total,
-      seconds,
+    const getTimeRemaining = (e) => {
+      const total = Date.parse(e) - Date.parse(new Date());
+      const seconds = Math.floor((total / 1000) % 60);
+      return {
+        total,
+        seconds,
+      };
     };
-  };
 
-  const startTimer = (e) => {
-    let { total, seconds } = getTimeRemaining(e);
-    if (total >= 0) {
-      setTimer(seconds);
-    }
-  };
-
-  const clearTimer = (e) => {
-    // If you adjust it you should also need to
-    // adjust the Endtime formula we are about
-    // to code next
-    setTimer(max);
-
-    // If you try to remove this line the
-    // updating of timer Variable will be
-    // after 1000ms or 1sec
-    if (Ref.current) clearInterval(Ref.current);
-    const id = setInterval(() => {
-      startTimer(e);
-    }, 1000);
-    Ref.current = id;
-  };
-
-  const getDeadTime = () => {
-    let deadline = new Date();
-
-    // This is where you need to adjust if
-    // you entend to add more time
-    deadline.setSeconds(deadline.getSeconds() + max);
-    return deadline;
-  };
-
-  // We can use useEffect so that when the component
-  // mount the timer will start as soon as possible
-
-  // We put empty array to act as componentDid
-  // mount only
-  useEffect(() => {
-    clearTimer(getDeadTime());
-  }, []);
-
-  useEffect(() => {
-    if (timer === 0) {
-      if (max === 10) {
-        switchRole();
-        max = 20;
-      } else if (max === 20) {
-        switchIsTurn();
-        max = 10;
+    const startTimer = (e) => {
+      let { total, seconds } = getTimeRemaining(e);
+      if (total >= 0) {
+        setTimer(seconds);
       }
+    };
+
+    const clearTimer = (e) => {
+      setTimer(max);
+
+      if (Ref.current) clearInterval(Ref.current);
+      const id = setInterval(() => {
+        startTimer(e);
+      }, 1000);
+      Ref.current = id;
+    };
+
+    const getDeadTime = () => {
+      let deadline = new Date();
+
+      deadline.setSeconds(deadline.getSeconds() + max);
+      return deadline;
+    };
+
+    useEffect(() => {
       clearTimer(getDeadTime());
-    }
-  }, [timer]);
+    }, []);
 
-  const onClickReset = () => {
-    clearTimer(getDeadTime());
-  };
+    //reset timer when time is up
+    useEffect(() => {
+      if (timer === 0) {
+        if (max === 10) {
+          switchRole();
+          max = 20;
+        } else if (max === 20) {
+          switchIsTurn();
+          max = 10;
+        }
+        clearTimer(getDeadTime());
+      }
+    }, [timer]);
 
-  return (
-    <div className="App">
-      <h2>{timer}</h2>
-      {/* <button
+    useImperativeHandle(ref, () => ({
+      resetTimerFunc,
+    }));
+
+    const resetTimerFunc = () => {
+      socket.emit("update_timer2", room);
+      max = 10;
+      clearTimer(getDeadTime());
+    };
+
+    useEffect(() => {
+      if (resetTimer) {
+        clearTimer(getDeadTime());
+        setResetTimer(false);
+      }
+    }, [resetTimer]);
+
+    return (
+      <div className="App">
+        <h2>{timer}</h2>
+        {/* <button
         onClick={async () => {
           // await switchIsTyping();
           // await switchIsTurn();
@@ -96,9 +103,10 @@ function Timer({ max, switchIsTyping, switchIsTurn, switchRole }) {
       >
         Reset
       </button> */}
-    </div>
-  );
-}
+      </div>
+    );
+  }
+);
 
 const GameRoom = () => {
   const { socket } = useSocket();
@@ -114,8 +122,10 @@ const GameRoom = () => {
   const [score, setScore] = useState(0);
   const [round, setRound] = useState(1);
   const [searchParams] = useSearchParams();
+  const [resetTimer, setResetTimer] = useState(false);
   let username = searchParams.get("name");
   let room = searchParams.get("roomID");
+  const childRef = useRef(null);
 
   //----------------------------------------input sending/checking----------------------------------------------//
   const sendInput = async () => {
@@ -233,11 +243,13 @@ const GameRoom = () => {
   });
 
   const switchIsTurn = async () => {
+    if (currentAnswer === "") return;
     const tempScore = await checkAnswer();
     if (round > 3) {
       endGame(tempScore);
       return;
     }
+    childRef.current.resetTimerFunc();
     setIsTurn((currentState) => !currentState);
     const turn = {
       room: room,
@@ -272,33 +284,59 @@ const GameRoom = () => {
     const payload = {
       score: tempScore,
       room: room,
-      author: username,
+      username: username,
     };
     await socket.emit("end_game", payload);
   };
 
   socket.off("ending_game").on("ending_game", async (payload) => {
+    const oppName = payload.username;
     const recievedScore = payload.score;
     const result = compareScore(recievedScore, score);
     const p2Payload = {
       score: score,
       room: room,
+      username: username,
     };
     await socket.emit("end_game_for_another", p2Payload);
     navigate({
       pathname: "/endScreen",
-      search: `?roomID=${room}&name=${username}&result=${result}`,
+      search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
     });
   });
 
   socket.on("ending_game_for_another", (payload) => {
+    const oppName = payload.username;
     const foo = score;
     const recievedScore = payload.score;
     const result = compareScore(recievedScore, foo);
     navigate({
       pathname: "/endScreen",
-      search: `?roomID=${room}&name=${username}&result=${result}`,
+      search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
     });
+  });
+
+  socket.on("restarting_game", async (data) => {
+    setCurrentInput("");
+    setScore(0);
+    setRound(1);
+    let setPlayer1;
+    if (data === "win") {
+      setPlayer1 = true;
+    } else if (data === "lose") {
+      setPlayer1 = false;
+    } else if (data === "draw") {
+      setPlayer1 = Math.random() < 0.5;
+    }
+    const readyData = {
+      room: room,
+      author: username,
+      p1: !setPlayer1,
+    };
+    await socket.emit("set_ready", readyData);
+    setIsTurn(setPlayer1);
+    setIsTyping(setPlayer1);
+    setIsReady(true);
   });
   //------------------------------------------------round logic----------------------------------------//
 
@@ -347,6 +385,7 @@ const GameRoom = () => {
           switchIsTyping={switchIsTyping}
           switchIsTurn={switchIsTurn}
           switchRole={switchRole}
+          ref={childRef}
         />
         <p> I am attacking</p>
         <p>Score = {score}</p>
@@ -386,6 +425,7 @@ const GameRoom = () => {
         switchIsTyping={switchIsTyping}
         switchIsTurn={switchIsTurn}
         switchRole={switchRole}
+        ref={childRef}
       />
       <p>I am answering</p>
       <p>Score = {score}</p>
@@ -397,9 +437,9 @@ const GameRoom = () => {
         onChange={(event) => {
           setCurrentAnswer(event.target.value);
         }}
-        onKeyDown={(event) => {
-          event.key === "Enter" && checkAnswer();
-        }}
+        // onKeyDown={(event) => {
+        //   event.key === "Enter" && checkAnswer();
+        // }}
       />
       <button
         onClick={async () => {

@@ -1,9 +1,21 @@
-import { useEffect, useState, useRef } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
+import { useSocket, socketRequest } from "../services/socket-io";
 
-function Timer2({ max, test }) {
+const Timer2 = forwardRef(({ max, test }, ref) => {
+  const { socket } = useSocket();
   const Ref = useRef(null);
 
   const [timer, setTimer] = useState(max);
+
+  socket.on("updating_timer2", () => {
+    resetTimerFunc2();
+  });
 
   const getTimeRemaining = (e) => {
     const total = Date.parse(e) - Date.parse(new Date());
@@ -66,11 +78,16 @@ function Timer2({ max, test }) {
     }
   }, [timer]);
 
+  useImperativeHandle(ref, () => ({
+    resetTimerFunc2,
+  }));
+
   // Another way to call the clearTimer() to start
   // the countdown is via action event from the
   // button first we create function to be called
   // by the button
-  const onClickReset = () => {
+  const resetTimerFunc2 = () => {
+    max = 10;
     clearTimer(getDeadTime());
   };
 
@@ -79,6 +96,6 @@ function Timer2({ max, test }) {
       <h2>{timer}</h2>
     </div>
   );
-}
+});
 
 export default Timer2;

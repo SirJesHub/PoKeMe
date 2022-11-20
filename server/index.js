@@ -53,6 +53,13 @@ io.on("connection", (socket) => {
   //     .emit("send_player_count", io.sockets.adapter.rooms.get(data).size);
   // });
 
+  socket.on("update_timer2", (data) => {
+    console.log(
+      "sjfkwlkfjwkjfkodsjciowefhweofhwklfnsdiofh8awfehwfnowiefjoisfhweoifhweoif"
+    );
+    socket.to(data).emit("updating_timer2");
+  });
+
   socket.on("send_input", (data) => {
     console.log(`recieve input = ${data.input} from room = ${data.room}`);
     socket.to(data.room).emit("recieve_input", data);
@@ -98,6 +105,12 @@ io.on("connection", (socket) => {
   socket.on("end_game_for_another", (data) => {
     console.log(`From P2: ${data.score}`);
     socket.to(data.room).emit("ending_game_for_another", data);
+  });
+
+  socket.on("restart_game", async (data) => {
+    console.log("RESTARTING game");
+    await socket.to(data.room).emit("restart_game_for_another");
+    await socket.emit("restarting_game", data.startToken); //emit to the one who click restart
   });
 
   // socket.on("turn_end", (data) => {
