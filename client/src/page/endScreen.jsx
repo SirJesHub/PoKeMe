@@ -18,31 +18,61 @@ const EndScreen = () => {
   const navigate = useNavigate();
   const room = searchParams.get("roomID");
   const name = searchParams.get("name");
+  const oppName = searchParams.get("oppName");
   const result = searchParams.get("result");
+  const receivedScore = searchParams.get("receivedScore");
+  const score = searchParams.get("score");
 
   const winRes = [
-    `Congrats ${name}!!! You won`,
-    `Props to ${name} for prevailing a strong opponent`,
-    `It's your victory!${name}`,
-    `${name} is the king of room ${room}`,
+    `Congratulations! ${name}`,
+    `${name}, You won!`,
+    `${name}, you’ve beated ${oppName}!`,
+    `You did it! ${name}`,
+    `Good job! ${name}`,
+    `${name} is the victor!`,
+  ];
+
+  const drawRes = [
+    `That was a draw game, ${name}`,
+    `${name} & ${oppName}, you both did well`,
+    `${name} & ${oppName} tied`,
+    `Can’t find a winner for you, ${name} & ${oppName}`,
+    `The game was tied, ${name}`,
+  ];
+
+  const loseRes = [
+    `You lost, ${name}`,
+    `Try again, ${name}`,
+    `You need to improve, ${name}`,
+    `${name}, you’ve been defeated`,
+    `You can do it better, ${name}`,
   ];
 
   if (result === "win") {
     return (
       <div>
+        <h1>
+          {score}:{receivedScore}
+        </h1>
         <h1> {winRes[Math.floor(Math.random() * winRes.length)]}</h1>
       </div>
     );
   } else if (result === "draw") {
     return (
       <div>
-        <h1> In the end, it is a tie for {name}</h1>
+        <h1>
+          {score}:{receivedScore}
+        </h1>
+        <h1> {drawRes[Math.floor(Math.random() * drawRes.length)]}</h1>
       </div>
     );
   } else if (result === "lose") {
     return (
       <div>
-        <h1> Better luck next time! {name}</h1>
+        <h1>
+          {score}:{receivedScore}
+        </h1>
+        <h1>{loseRes[Math.floor(Math.random() * loseRes.length)]}</h1>
       </div>
     );
   }

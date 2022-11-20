@@ -283,32 +283,35 @@ const GameRoom = () => {
     const payload = {
       score: tempScore,
       room: room,
-      author: username,
+      username: username,
     };
     await socket.emit("end_game", payload);
   };
 
   socket.off("ending_game").on("ending_game", async (payload) => {
+    const oppName = payload.username
     const recievedScore = payload.score;
     const result = compareScore(recievedScore, score);
     const p2Payload = {
       score: score,
       room: room,
+      username: username
     };
     await socket.emit("end_game_for_another", p2Payload);
     navigate({
       pathname: "/endScreen",
-      search: `?roomID=${room}&name=${username}&result=${result}`,
+      search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
     });
   });
 
   socket.on("ending_game_for_another", (payload) => {
+    const oppName = payload.username
     const foo = score;
     const recievedScore = payload.score;
     const result = compareScore(recievedScore, foo);
     navigate({
       pathname: "/endScreen",
-      search: `?roomID=${room}&name=${username}&result=${result}`,
+      search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
     });
   });
   //------------------------------------------------round logic----------------------------------------//
