@@ -19,7 +19,7 @@ const Button = ({ children, size, onClick }) => {
         cursor: "pointer",
       }}
       onClick={() => {
-        // start();
+        start();
         onClick(); //Start the audio when button is clicked
       }}
     >

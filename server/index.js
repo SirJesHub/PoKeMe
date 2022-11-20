@@ -67,10 +67,37 @@ io.on("connection", (socket) => {
     socket.to(data.room).emit("get_ready", data);
   });
 
-  socket.on("switch_side", (data) => {
+  socket.on("switch_role", (data) => {
+    console.log("switching role -->");
+    console.log(data);
+    socket.to(data.room).emit("switching_role", data);
+  });
+
+  socket.on("switch_isTyping", (data) => {
+    console.log("---------------------");
+    console.log(data);
     console.log(`current turn ${data.isTurn}`);
     console.log(`typing? ${data.isTyping}`);
-    socket.nsp.to(data.room).emit("switching_side", data);
+    console.log("---------------------");
+    socket.to(data.room).emit("switching_isTyping", data);
+  });
+
+  socket.on("switch_isTurn", (data) => {
+    console.log(data);
+    console.log(`current turn ${data.isTurn}`);
+    console.log(`typing? ${data.isTyping}`);
+    socket.to(data.room).emit("switching_isTurn", data);
+  });
+
+  socket.on("end_game", (data) => {
+    console.log("ending game");
+    console.log(`From P1: ${data.score}`);
+    socket.to(data.room).emit("ending_game", data);
+  });
+
+  socket.on("end_game_for_another", (data) => {
+    console.log(`From P2: ${data.score}`);
+    socket.to(data.room).emit("ending_game_for_another", data);
   });
 
   // socket.on("turn_end", (data) => {

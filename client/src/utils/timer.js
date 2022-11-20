@@ -1,29 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 
-function Timer({ max, round }) {
-  //   const [counter, setCounter] = useState(max);
-
-  //   useEffect(() => {
-  //     if (counter > 0) {
-  //       setTimeout(() => setCounter(counter - 1), 1000);
-  //     }
-  //   }, [counter]);
-
-  //   useEffect(() => {
-  //     if (round < 4) {
-  //       setCounter(max);
-  //     }
-  //   }, [round]);
-
-  //   return <span>{counter}</span>;
-
-  //---------------------------------------//
-  // We need ref in this, because we are dealing
-  // with JS setInterval to keep track of it and
-  // stop it when needed
+function Timer2({ max, test }) {
   const Ref = useRef(null);
 
-  // The state for our timer
   const [timer, setTimer] = useState(max);
 
   const getTimeRemaining = (e) => {
@@ -63,7 +42,7 @@ function Timer({ max, round }) {
 
     // This is where you need to adjust if
     // you entend to add more time
-    deadline.setSeconds(deadline.getSeconds() + 20);
+    deadline.setSeconds(deadline.getSeconds() + max);
     return deadline;
   };
 
@@ -77,7 +56,14 @@ function Timer({ max, round }) {
   }, []);
 
   useEffect(() => {
-    if (timer === 0) alert("time is up!");
+    if (timer === 0) {
+      if (max === 10) {
+        max = 20;
+      } else if (max === 20) {
+        max = 10;
+      }
+      clearTimer(getDeadTime());
+    }
   }, [timer]);
 
   // Another way to call the clearTimer() to start
@@ -91,9 +77,8 @@ function Timer({ max, round }) {
   return (
     <div className="App">
       <h2>{timer}</h2>
-      <button onClick={onClickReset}>Reset</button>
     </div>
   );
 }
 
-export default Timer;
+export default Timer2;

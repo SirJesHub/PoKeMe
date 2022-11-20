@@ -17,6 +17,7 @@ import CharSel from "./page/charSel";
 import WaitingRoom from "./page/waitingRoom";
 import GameRoom from "./page/gameRoom";
 import RoomFull from "./page/roomFull";
+import EndScreen from "./page/endScreen";
 
 // const socket = io.connect("http://localhost:3001");
 
@@ -44,7 +45,8 @@ function App() {
             <Route path={"charSel"} element={<CharSel />} />
             <Route path={"waitingRoom"} element={<WaitingRoom />} />
             <Route path={"gameRoom"} element={<GameRoom />} />
-            <Route path="roomFull" element={<RoomFull />} />
+            <Route path={"roomFull"} element={<RoomFull />} />
+            <Route path={"endScreen"} element={<EndScreen />} />
           </Route>
         </Routes>
       </BrowserRouter>
