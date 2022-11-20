@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Character from "../components/Player1Char";
 import PikachuChar from "../components/PikachuChar";
 import { useSocket, socketRequest } from "../services/socket-io";
@@ -9,8 +9,96 @@ import HStack from "../components/HStack";
 import GameLogo from "../components/GameLogo";
 import { BOARD_SMALL } from "../utils/constants";
 import Board from "../components/Board";
-import Timer from "../components/Timer";
+import Timer2 from "../utils/timer";
 import { useNavigate, useSearchParams } from "react-router-dom";
+
+function Timer({ max, switchIsTyping, switchIsTurn, switchRole }) {
+  const Ref = useRef(null);
+
+  const [timer, setTimer] = useState(max);
+
+  const getTimeRemaining = (e) => {
+    const total = Date.parse(e) - Date.parse(new Date());
+    const seconds = Math.floor((total / 1000) % 60);
+    return {
+      total,
+      seconds,
+    };
+  };
+
+  const startTimer = (e) => {
+    let { total, seconds } = getTimeRemaining(e);
+    if (total >= 0) {
+      setTimer(seconds);
+    }
+  };
+
+  const clearTimer = (e) => {
+    // If you adjust it you should also need to
+    // adjust the Endtime formula we are about
+    // to code next
+    setTimer(max);
+
+    // If you try to remove this line the
+    // updating of timer Variable will be
+    // after 1000ms or 1sec
+    if (Ref.current) clearInterval(Ref.current);
+    const id = setInterval(() => {
+      startTimer(e);
+    }, 1000);
+    Ref.current = id;
+  };
+
+  const getDeadTime = () => {
+    let deadline = new Date();
+
+    // This is where you need to adjust if
+    // you entend to add more time
+    deadline.setSeconds(deadline.getSeconds() + max);
+    return deadline;
+  };
+
+  // We can use useEffect so that when the component
+  // mount the timer will start as soon as possible
+
+  // We put empty array to act as componentDid
+  // mount only
+  useEffect(() => {
+    clearTimer(getDeadTime());
+  }, []);
+
+  useEffect(() => {
+    if (timer === 0) {
+      if (max === 10) {
+        switchRole();
+        max = 20;
+      } else if (max === 20) {
+        switchIsTurn();
+        max = 10;
+      }
+      clearTimer(getDeadTime());
+    }
+  }, [timer]);
+
+  const onClickReset = () => {
+    clearTimer(getDeadTime());
+  };
+
+  return (
+    <div className="App">
+      <h2>{timer}</h2>
+      {/* <button
+        onClick={async () => {
+          // await switchIsTyping();
+          // await switchIsTurn();
+          switchRole();
+        }}
+      >
+        Reset
+      </button> */}
+    </div>
+  );
+}
 
 const GameRoom = () => {
   const { socket } = useSocket();
@@ -29,6 +117,7 @@ const GameRoom = () => {
   let username = searchParams.get("name");
   let room = searchParams.get("roomID");
 
+  //----------------------------------------input sending/checking----------------------------------------------//
   const sendInput = async () => {
     if (currentInput !== "") {
       const inputData = {
@@ -78,7 +167,9 @@ const GameRoom = () => {
     console.log("answer recieved" + data.round);
     // setRound((prevRound) => prevRound + 1);
   });
+  //--------------------------------------------------input sending/checking---------------------------------//
 
+  //-----------------------------------------round logic----------------------------------------------------//
   const begin = async () => {
     let setPlayer1 = Math.random() < 0.5;
     const readyData = {
@@ -98,7 +189,32 @@ const GameRoom = () => {
     setIsReady(true);
   });
 
+  const switchRole = async () => {
+    setCurrentInput("");
+    setIsTyping((currentState) => !currentState);
+    setIsTurn((currentState) => !currentState);
+    setRound((round) => round + 1);
+    const payload = {
+      room,
+      round,
+      isTurn: isTurn,
+      isTyping: isTyping,
+    };
+    socket.emit("switch_role", payload);
+  };
+
+  socket.on("switching_role", (data) => {
+    if (round > 3) {
+      endGame(score);
+      return;
+    }
+    setIsTurn(data.isTurn);
+    setIsTyping(data.isTyping);
+    setRound((round) => (round = data.round + 1));
+  });
+
   const switchIsTyping = async () => {
+    if (currentInput === "") return;
     await sendInput();
     setIsTyping((currentState) => !currentState);
     const turn = {
@@ -184,6 +300,7 @@ const GameRoom = () => {
       search: `?roomID=${room}&name=${username}&result=${result}`,
     });
   });
+  //------------------------------------------------round logic----------------------------------------//
 
   useEffect(() => {
     socketRequest(socket, ["get_both_charID"], "get_both_charID_response").then(
@@ -207,6 +324,10 @@ const GameRoom = () => {
 
   console.log("other", otherCharId);
 
+  const test = () => {
+    alert("it work");
+  };
+
   return !isReady ? (
     <div>
       <h3>press to begin</h3>
@@ -221,6 +342,12 @@ const GameRoom = () => {
   ) : isTurn ? (
     isTyping ? (
       <div>
+        <Timer
+          max={10}
+          switchIsTyping={switchIsTyping}
+          switchIsTurn={switchIsTurn}
+          switchRole={switchRole}
+        />
         <p> I am attacking</p>
         <p>Score = {score}</p>
         <p>Round {round}</p>
@@ -246,6 +373,7 @@ const GameRoom = () => {
       </div>
     ) : (
       <div>
+        <Timer2 max={20} />
         <p>I am waiting for answer</p>
         <p>Score = {score}</p>
         <p>Round {round}</p>
@@ -253,6 +381,12 @@ const GameRoom = () => {
     )
   ) : isTyping ? (
     <div>
+      <Timer
+        max={20}
+        switchIsTyping={switchIsTyping}
+        switchIsTurn={switchIsTurn}
+        switchRole={switchRole}
+      />
       <p>I am answering</p>
       <p>Score = {score}</p>
       <p>Round {round}</p>
@@ -278,6 +412,7 @@ const GameRoom = () => {
     </div>
   ) : (
     <div>
+      <Timer2 max={10} />
       <p>i am waiting for attacker</p>
       <p>Score = {score}</p>
       <p>Round {round}</p>

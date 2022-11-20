@@ -67,6 +67,12 @@ io.on("connection", (socket) => {
     socket.to(data.room).emit("get_ready", data);
   });
 
+  socket.on("switch_role", (data) => {
+    console.log("switching role -->");
+    console.log(data);
+    socket.to(data.room).emit("switching_role", data);
+  });
+
   socket.on("switch_isTyping", (data) => {
     console.log("---------------------");
     console.log(data);
