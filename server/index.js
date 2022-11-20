@@ -53,6 +53,13 @@ io.on("connection", (socket) => {
   //     .emit("send_player_count", io.sockets.adapter.rooms.get(data).size);
   // });
 
+  socket.on("update_timer2", (data) => {
+    console.log(
+      "sjfkwlkfjwkjfkodsjciowefhweofhwklfnsdiofh8awfehwfnowiefjoisfhweoifhweoif"
+    );
+    socket.to(data).emit("updating_timer2");
+  });
+
   socket.on("send_input", (data) => {
     console.log(`recieve input = ${data.input} from room = ${data.room}`);
     socket.to(data.room).emit("recieve_input", data);
