@@ -18,12 +18,34 @@ const EndScreen = () => {
   const navigate = useNavigate();
   const room = searchParams.get("roomID");
   const name = searchParams.get("name");
+  const result = searchParams.get("result");
 
-  return (
-    <div>
-      <h1> yay project almost done</h1>
-    </div>
-  );
+  const winRes = [
+    `Congrats ${name}!!! You won`,
+    `Props to ${name} for prevailing a strong opponent`,
+    `It's your victory!${name}`,
+    `${name} is the king of room ${room}`,
+  ];
+
+  if (result === "win") {
+    return (
+      <div>
+        <h1> {winRes[Math.floor(Math.random() * winRes.length)]}</h1>
+      </div>
+    );
+  } else if (result === "draw") {
+    return (
+      <div>
+        <h1> In the end, it is a tie for {name}</h1>
+      </div>
+    );
+  } else if (result === "lose") {
+    return (
+      <div>
+        <h1> Better luck next time! {name}</h1>
+      </div>
+    );
+  }
 };
 
 export default EndScreen;
