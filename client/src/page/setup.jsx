@@ -28,7 +28,8 @@ const Setup = () => {
 
   const handleCreateRoom = () => {
     if (!name) return;
-    const roomCode = Math.floor(Math.random() * 1000 + 1);
+    var randNumber = Math.round(Math.random() * 999999999);
+    const roomCode = randNumber.toString().substr(0, 4);
     socket.emit("join_room", `${roomCode}`);
     navigate({
       pathname: "/waitingRoom",

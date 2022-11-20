@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
+import Timer from "./utils/timer";
+import { io } from "socket.io-client";
 
 function Game({ socket, username, room }) {
   const [currentInput, setCurrentInput] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [inputList, setInputList] = useState([]);
   const [score, setScore] = useState(0);
-  const [counter, setCounter] = useState(10);
+  const [displayWaitingScreen, setDisplayWaitingScreen] = useState(true);
+  const [playerCount, setPlayerCount] = useState(0);
+  const [round, setRound] = useState(0); //not used
 
+  //send input
   const sendInput = async () => {
     if (currentInput !== "") {
       const inputData = {
@@ -20,7 +25,9 @@ function Game({ socket, username, room }) {
       setCurrentInput("");
     }
   };
+  //send input finish
 
+  //send answer
   const checkAnswer = async () => {
     if (currentAnswer !== "") {
       const answerData = {
@@ -38,44 +45,61 @@ function Game({ socket, username, room }) {
       setCurrentAnswer("");
     }
   };
+  //send answer finish
 
-  useEffect(() => {
-    socket.on("recieve_input", (data) => {
-      setInputList((list) => [...list, data.input]);
-    });
-  });
+  //check connection
+  // window.onload = async (event) => {
+  //   await socket.emit("req_player_count", room);
+  //   socket.on("send_player_count", (data) => {
+  //     if (data > 1) {
+  //       setDisplayWaitingScreen(false);
+  //     }
+  //   });
+  // };
 
-  //   const startTimer = () => {
-  //     //setCounter(10);
-  //     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
-  //     // while (counter > 0) {
-  //     //   setTimeout(() => setCounter(counter - 1), 1000);
-  //     // }
-  //   };
-  function startTimer(duration, display) {
-    var timer = duration,
-      minutes,
-      seconds;
-    setInterval(function () {
-      minutes = parseInt(timer / 60, 10);
-      seconds = parseInt(timer % 60, 10);
+  //timer
+  const startingSecond = 20; //change this to change timer
+  let time = startingSecond;
+  let refreshIntervalId = setInterval(updateCountdown, 1000);
 
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
+  function updateCountdown() {
+    let seconds = time;
+    const countdownEl = document.getElementById("countdown");
+    countdownEl.innerHTML = `${seconds}`;
+    time--;
 
-      display.textContent = minutes + ":" + seconds;
-
-      if (--timer < 0) {
-        timer = duration;
-      }
-    }, 1000);
+    if (time < 0) clearInterval(refreshIntervalId);
   }
 
-  window.onload = function () {
-    var fiveMinutes = 60 * 5,
-      display = document.querySelector("#time");
-    startTimer(fiveMinutes, display);
+  // function resetTimer() {
+  //   time = startingSecond;
+  // }
+  //timer finish
+
+  const goNextRound = () => {
+    setRound((round) => round + 1);
   };
+
+  useEffect(() => {
+    socket.on("player_count", (data) => {
+      if (data === 2) {
+        setDisplayWaitingScreen(false);
+      }
+    });
+
+    socket.on("send_player_count", (playerCount) =>
+      setPlayerCount(playerCount)
+    );
+
+    socket.on("recieve_input", (data) => {
+      setInputList((list) => [...list, data.input]);
+      // resetTimer();
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    if (playerCount === 2) setDisplayWaitingScreen(false);
+  }, [playerCount]);
 
   return (
     <div>
@@ -83,11 +107,6 @@ function Game({ socket, username, room }) {
         <body></body>
 
         <h1>Score = {score}</h1>
-        <h1>Time = {counter} </h1>
-        <div>
-          Registration closes in <span id="time">05:00</span> minutes!
-        </div>
-
         {/* send input */}
         <input
           type="text"
@@ -103,7 +122,6 @@ function Game({ socket, username, room }) {
         <button
           onClick={() => {
             sendInput();
-            startTimer();
           }}
         >
           &#9658;

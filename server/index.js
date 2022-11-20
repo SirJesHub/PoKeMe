@@ -46,19 +46,37 @@ io.on("connection", (socket) => {
     }
   });
 
+  // socket.on("req_player_count", (data) => {
+  //   console.log(`player count + ${io.sockets.adapter.rooms.get(data).size}`);
+  //   socket
+  //     .to()
+  //     .emit("send_player_count", io.sockets.adapter.rooms.get(data).size);
+  // });
+
   socket.on("send_input", (data) => {
-    console.log(`recieve input = ${data.input}`);
+    console.log(`recieve input = ${data.input} from room = ${data.room}`);
     socket.to(data.room).emit("recieve_input", data);
   });
 
   socket.on("send_answer", (data) => {
     console.log(`recieve answer = ${data.answer}`);
+    socket.to(data.room).emit("recieve_answer", data);
   });
 
-  socket.on("turn_end", (data) => {
-    console.log(`recieve answer = ${data.answer}`);
-    socket.nsp.to(data).emit("your turn", data);
+  socket.on("set_ready", (data) => {
+    socket.to(data.room).emit("get_ready", data);
   });
+
+  socket.on("switch_side", (data) => {
+    console.log(`current turn ${data.isTurn}`);
+    console.log(`typing? ${data.isTyping}`);
+    socket.nsp.to(data.room).emit("switching_side", data);
+  });
+
+  // socket.on("turn_end", (data) => {
+  //   console.log(`recieve answer = ${data.answer}`);
+  //   socket.nsp.to(data).emit("your turn", data);
+  // });
 
   socket.on("select_char", (charId) => {
     const playerId = socket.id;

@@ -5,7 +5,7 @@ import HStack from "../components/HStack";
 import TextInput from "../components/TextInput";
 import VStack from "../components/VStack";
 import { useSocket } from "../services/socket-io";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { PICKACHU1 } from "../utils/constants";
 import PikachuChar from "../components/PikachuChar";
 import CharmanderChar from "../components/CharmanderChar";
@@ -15,9 +15,15 @@ const CharSel = () => {
   const navigate = useNavigate();
   const { socket } = useSocket();
   const [isCharSel, setIsCharSel] = useState(false);
+  const [searchParams] = useSearchParams();
+  const name = searchParams.get("name");
+  const roomCode = searchParams.get("roomID");
 
   socket.on("game_start", () => {
-    navigate("/gameRoom");
+    navigate({
+      pathname: "/gameRoom",
+      search: `?roomID=${roomCode}&name=${name}`,
+    });
   });
 
   const handleCharSel = (charID) => {
