@@ -3,6 +3,9 @@ const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
 
+const rooms = {};
+const player = {};
+
 const app = express();
 
 app.use(cors());
@@ -19,19 +22,25 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log(`User conencted: ${socket.id}`);
 
-  socket.on("join_room", (roomId) => {
-    socket.join(roomId);
-    console.log(`User with ID: ${socket.id} joined room: ${roomId}`);
-    // console.log(
-    //   `room id: ${roomId} has ${io.sockets.adapter.rooms.get(roomId).size} player`
-    // );
-    // socket.server
-    //   .in(roomId)
-    //   .emit("send_player_count", io.sockets.adapter.rooms.get(roomId).size);
-    const roomSize = io.of("/").adapter.rooms.get(roomId).size;
+  socket.on("join_room", (data) => {
+    socket.join(data);
+    console.log(`User with ID: ${socket.id}joined room: ${data}`);
+    const roomSize = io.of("/").adapter.rooms.get(data).size;
     console.log("room Size", roomSize);
+
+    if (!rooms[data]) {
+      rooms[data] = {
+        players: new Set(),
+      };
+    }
+
+    rooms[data].players.add(socket.id);
+
+    player[socket.id] = { room: data };
+
     if (roomSize == 2) {
-      socket.nsp.to(roomId).emit("send_player_count", roomSize);
+      socket.nsp.to(data).emit("ready_for_char");
+      socket.nsp.to(data).emit("send_player_count", roomSize);
     } else if (roomSize > 2) {
       io.to(socket.id).emit("room_full");
     }
@@ -45,16 +54,77 @@ io.on("connection", (socket) => {
   // });
 
   socket.on("send_input", (data) => {
-    console.log(`recieve input = ${data.input}`);
+    console.log(`recieve input = ${data.input} from room = ${data.room}`);
     socket.to(data.room).emit("recieve_input", data);
   });
 
   socket.on("send_answer", (data) => {
     console.log(`recieve answer = ${data.answer}`);
+    socket.to(data.room).emit("recieve_answer", data);
+  });
+
+  socket.on("set_ready", (data) => {
+    socket.to(data.room).emit("get_ready", data);
+  });
+
+  socket.on("switch_side", (data) => {
+    console.log(`current turn ${data.isTurn}`);
+    console.log(`typing? ${data.isTyping}`);
+    socket.nsp.to(data.room).emit("switching_side", data);
+  });
+
+  // socket.on("turn_end", (data) => {
+  //   console.log(`recieve answer = ${data.answer}`);
+  //   socket.nsp.to(data).emit("your turn", data);
+  // });
+
+  socket.on("select_char", (charId) => {
+    const playerId = socket.id;
+    const roomId = player[playerId]?.room;
+
+    player[playerId].char = charId;
+
+    const room = rooms[roomId];
+
+    let isReadyForGameStart = true;
+    for (const pid of room.players.values()) {
+      if (player[pid].char == undefined) {
+        isReadyForGameStart = false;
+      }
+    }
+
+    if (isReadyForGameStart) {
+      socket.nsp.to(roomId).emit("game_start");
+    }
+  });
+
+  socket.on("get_both_charID", () => {
+    const playerId = socket.id;
+    const roomId = player[playerId]?.room;
+    const room = rooms[roomId];
+    let myCharID = undefined;
+    let otherCharID = undefined;
+
+    for (const pid of room?.players?.values()) {
+      if (pid == playerId) {
+        myCharID = player[pid].char;
+      } else {
+        otherCharID = player[pid].char;
+      }
+    }
+    socket.nsp
+      .to(playerId)
+      .emit("get_both_charID_response", { myCharID, otherCharID });
   });
 
   socket.on("disconnect", () => {
     console.log(`User disconencted: ${socket.id}`);
+    const pid = socket.id;
+    // clear user data
+    player[pid] = undefined;
+    for (const roomId of Object.keys(rooms)) {
+      rooms[roomId]?.player?.delete(pid);
+    }
   });
 });
 
