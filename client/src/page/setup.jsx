@@ -11,6 +11,26 @@ const Setup = () => {
   const [name, setName] = useState("");
   const navigate = useNavigate();
   const { socket } = useSocket();
+  const [playerOnline, setPlayerOnline] = useState(420);
+
+  socket.on("get_player_count", (data) => {
+    console.log(`player online: ${data.playerCount}`);
+    setPlayerOnline((prevOnline) => prevOnline + data.playerCount);
+  });
+
+  window.onload = function playerRequest() {
+    console.log("function ran");
+    setPlayerOnline((prevOnline) => 70);
+    // return reqPlayerOnline();
+  };
+
+  const reqPlayerOnline = async () => {
+    let playerCount = 69;
+    const reqData = {
+      playerCount: playerCount,
+    };
+    await socket.emit("req_player_count", reqData);
+  };
 
   socket.on("room_full", () => {
     navigate("/roomFull");
@@ -39,6 +59,10 @@ const Setup = () => {
 
   return (
     <VStack>
+      <div>
+        <br></br>
+        <p> player online = {playerOnline}</p>
+      </div>
       <GameLogo />
       <HStack style={{ justifyContent: "space-around" }}>
         <VStack gap={"16px"}>
