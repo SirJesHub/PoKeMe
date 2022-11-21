@@ -146,7 +146,7 @@ const GameRoom = () => {
 
   socket.on("recieve_input", (data) => {
     console.log("input recieved" + data.round);
-    // setRound((prevRound) => prevRound + 1);
+    goNextRound();
     setInputList((list) => [...list, data.input]);
   });
 
@@ -175,7 +175,7 @@ const GameRoom = () => {
 
   socket.on("recieve_answer", (data) => {
     console.log("answer recieved" + data.round);
-    // setRound((prevRound) => prevRound + 1);
+    goNextRound();
   });
   //--------------------------------------------------input sending/checking---------------------------------//
 
@@ -299,11 +299,6 @@ const GameRoom = () => {
       username: username,
     };
     await socket.emit("end_game_for_another", p2Payload);
-    navigate({
-      pathname: "/endScreen",
-      search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
-    });
-  });
 
   socket.on("ending_game_for_another", (payload) => {
     const oppName = payload.username;
