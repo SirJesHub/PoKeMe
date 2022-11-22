@@ -6,6 +6,7 @@ const TextInput = ({ value, onChange, placeholderVal }) => {
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        className="texts"
         style={{
           width: "80%",
           position: "absolute",
@@ -15,6 +16,7 @@ const TextInput = ({ value, onChange, placeholderVal }) => {
           transform: "translate(-50%, -50%)",
           borderColor: "transparent",
           outline: "none",
+          fontFamily: "Press Start 2P",
         }}
         placeholder={placeholderVal}
       />

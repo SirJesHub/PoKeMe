@@ -1,9 +1,10 @@
 import { BUTTON2, BUTTON_BIG, BUTTON_SMALL } from "../../utils/constants";
+import "./home.css";
 
 let audio = new Audio("bg/fart-03.mp3");
 
 const start = () => {
-  //console.log("playsound");
+  console.log("playsound");
   audio.play();
 };
 
@@ -17,9 +18,10 @@ const Button = ({ children, size, onClick }) => {
         border: "none",
         backgroundColor: "transparent",
         cursor: "pointer",
+        fontFamily: "Press Start 2P",
       }}
       onClick={() => {
-        // start();
+        start();
         onClick(); //Start the audio when button is clicked
       }}
     >
@@ -33,9 +35,10 @@ const Button = ({ children, size, onClick }) => {
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
+          fontSize: "50%",
         }}
       >
-        {children}
+        <p>{children}</p>
       </div>
     </button>
   );
