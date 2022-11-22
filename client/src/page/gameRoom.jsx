@@ -13,6 +13,8 @@ import Timer2 from "../utils/timer";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { forwardRef } from "react";
 import { useImperativeHandle } from "react";
+import Button from "../components/Button";
+import TextInput from "../components/TextInput";
 
 const Timer = forwardRef(
   ({ max, switchIsTyping, switchIsTurn, switchRole }, ref) => {
@@ -92,7 +94,14 @@ const Timer = forwardRef(
     }, [resetTimer]);
 
     return (
-      <div className="App">
+      <div
+        className="App"
+        style={{
+          color: "red",
+          fontSize: "10px",
+          lineHeight: "10px",
+        }}
+      >
         <h2>{timer}</h2>
         {/* <button
         onClick={async () => {
@@ -367,96 +376,180 @@ const GameRoom = () => {
   };
 
   return !isReady ? (
-    <div>
-      <h3>press to begin</h3>
-      <button
+    <VStack>
+      <Button
+        size="small"
         onClick={() => {
           begin();
         }}
       >
-        &#9658;
-      </button>
-    </div>
+        Start!
+      </Button>
+    </VStack>
   ) : isTurn ? (
     isTyping ? (
-      <div>
-        <Timer
-          max={10}
-          switchIsTyping={switchIsTyping}
-          switchIsTurn={switchIsTurn}
-          switchRole={switchRole}
-          ref={childRef}
-        />
-        <p> I am attacking</p>
-        <p>Score = {score}</p>
-        <p>Round {round}</p>
-        <input
-          type="text"
-          value={currentInput}
-          placeholder="input"
-          onChange={(event) => {
-            setCurrentInput(event.target.value);
-          }}
+      <VStack>
+        <HStack style={{ fontSize: "10px" }}>
+          <VStack gap={"0px"}>
+            <p style={{ lineHeight: "0px" }}>Time</p>
+            <Timer
+              max={10}
+              switchIsTyping={switchIsTyping}
+              switchIsTurn={switchIsTurn}
+              switchRole={switchRole}
+              ref={childRef}
+              style={{
+                color: "rgb(123,123,123)",
+                fontSize: "10px",
+                lineHeight: "0px",
+              }}
+            />
+          </VStack>
+          <VStack gap={"0px"}>
+            <p style={{ lineHeight: "0px" }}>Score</p>
+            {score}
+          </VStack>
+          <VStack gap={"0px"}>
+            <p style={{ lineHeight: "0px" }}>Round</p>
+            {round}
+          </VStack>
+        </HStack>
+
+        <HStack style={{ justifyContent: "center" }}>
+          <Player1Char size={myCharId}></Player1Char>
+          <Player2Char size={otherCharId}></Player2Char>
+        </HStack>
+        <HStack>
+          <TextInput
+            value={currentInput}
+            onChange={setCurrentInput}
+            onKeyDown={(event) => {
+              event.key === "Enter" && sendInput();
+            }}
+            placeholderVal="Attack!"
+          />
+          <Button
+            size="small"
+            onClick={async () => {
+              // await sendInput();
+              await switchIsTyping();
+            }}
+          >
+            Answer
+          </Button>
+        </HStack>
+      </VStack>
+    ) : (
+      <VStack gap={"0px"}>
+        <Board size="big" gap={"0px"}>
+          <VStack gap={"0px"}>
+            <Timer2
+              max={20}
+              style={{
+                color: "rgb(123,123,123)",
+                fontSize: "10px",
+                lineHeight: "0px",
+              }}
+            />
+            <p style={{ textAlign: "center", margin: "10px" }}>
+              I am waiting for answer
+            </p>
+
+            <HStack>
+              <VStack gap={"0px"}>
+                <p style={{ lineHeight: "0px" }}>Score</p>
+                {score}
+              </VStack>
+              <VStack gap={"0px"}>
+                <p style={{ lineHeight: "0px" }}>Round</p>
+                {round}
+              </VStack>
+            </HStack>
+          </VStack>
+        </Board>
+      </VStack>
+    )
+  ) : isTyping ? (
+    <VStack>
+      <HStack style={{ fontSize: "10px" }}>
+        <VStack gap={"0px"}>
+          <p style={{ lineHeight: "0px" }}>Time</p>
+          <Timer
+            max={20}
+            switchIsTyping={switchIsTyping}
+            switchIsTurn={switchIsTurn}
+            switchRole={switchRole}
+            ref={childRef}
+            style={{
+              color: "rgb(123,123,123)",
+              fontSize: "10px",
+              lineHeight: "10px",
+            }}
+          />
+        </VStack>
+        <VStack gap={"0px"}>
+          <p style={{ lineHeight: "0px" }}>Score</p>
+          {score}
+        </VStack>
+        <VStack gap={"0px"}>
+          <p style={{ lineHeight: "0px" }}>Round</p>
+          {round}
+        </VStack>
+      </HStack>
+
+      <HStack style={{ justifyContent: "center" }}>
+        <Player1Char size={myCharId}></Player1Char>
+        <Player2Char size={otherCharId}></Player2Char>
+      </HStack>
+      <HStack>
+        <TextInput
+          value={currentAnswer}
+          onChange={setCurrentAnswer}
           onKeyDown={(event) => {
             event.key === "Enter" && sendInput();
           }}
+          placeholderVal="Type Away!"
         />
-        <button
+        <Button
+          size="small"
           onClick={async () => {
-            // await sendInput();
-            await switchIsTyping();
+            // await checkAnswer();
+            await switchIsTurn();
           }}
         >
-          &#9658;
-        </button>
-      </div>
-    ) : (
-      <div>
-        <Timer2 max={20} />
-        <p>I am waiting for answer</p>
-        <p>Score = {score}</p>
-        <p>Round {round}</p>
-      </div>
-    )
-  ) : isTyping ? (
-    <div>
-      <Timer
-        max={20}
-        switchIsTyping={switchIsTyping}
-        switchIsTurn={switchIsTurn}
-        switchRole={switchRole}
-        ref={childRef}
-      />
-      <p>I am answering</p>
-      <p>Score = {score}</p>
-      <p>Round {round}</p>
-      <input
-        type="text"
-        value={currentAnswer}
-        placeholder="answer"
-        onChange={(event) => {
-          setCurrentAnswer(event.target.value);
-        }}
-        // onKeyDown={(event) => {
-        //   event.key === "Enter" && checkAnswer();
-        // }}
-      />
-      <button
-        onClick={async () => {
-          // await checkAnswer();
-          await switchIsTurn();
-        }}
-      >
-        &#9658;
-      </button>
-    </div>
+          Answer
+        </Button>
+      </HStack>
+    </VStack>
   ) : (
-    <div>
-      <Timer2 max={10} />
-      <p>i am waiting for attacker</p>
-      <p>Score = {score}</p>
-      <p>Round {round}</p>
-    </div>
+    <VStack gap={"0px"}>
+      <Board size="big" gap={"0px"}>
+        <VStack gap={"0px"}>
+          <Timer2
+            max={10}
+            style={{
+              color: "rgb(123,123,123)",
+              fontSize: "10px",
+              lineHeight: "10px",
+            }}
+          />
+          <p style={{ textAlign: "center", margin: "10px" }}>
+            Waiting for their input...
+          </p>
+
+          <HStack>
+            <VStack gap={"0px"}>
+              <p style={{ lineHeight: "0px" }}>Score</p>
+              {score}
+            </VStack>
+            <VStack gap={"0px"}>
+              <p style={{ lineHeight: "0px" }}>Round</p>
+              {round}
+            </VStack>
+          </HStack>
+        </VStack>
+      </Board>
+    </VStack>
   );
   // return !isTurn ? (
   //   <VStack>

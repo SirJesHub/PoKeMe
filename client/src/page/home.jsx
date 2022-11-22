@@ -5,12 +5,22 @@ import { useNavigate } from "react-router-dom";
 import VStack from "../components/VStack";
 import PikachuChar from "../components/PikachuChar";
 import BulbaChar from "../components/BulbasaurChar";
-import Board from "../components/Board";
+import GameBoard from "../components/GameBoard";
+import { BGMUSIC } from "../utils/constants";
+
+//      <GameBoard childern={"Vinze"}></GameBoard>
 
 const Home = () => {
   const navigate = useNavigate();
   return (
     <VStack gap={"20px"}>
+      <embed
+        src={BGMUSIC}
+        loop="true"
+        autostart="true"
+        width="2"
+        height="0"
+      ></embed>
       <GameLogo />
       <Button
         size={"small"}
@@ -18,9 +28,11 @@ const Home = () => {
           navigate("/setup");
         }}
       >
-        START
+        <p className="texts">START</p>
       </Button>
-      <Button>How to play?</Button>
+      <Button>
+        <p className="texts">How to Play</p>
+      </Button>
     </VStack>
   );
 };

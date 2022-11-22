@@ -1,6 +1,7 @@
 import { Outlet } from "react-router-dom";
-import { BG_GAME, JOY_IMAGE } from "../../utils/constants";
+import { BGMUSIC, BG_GAME, JOY_IMAGE } from "../../utils/constants";
 import "./Layout.css";
+let audio = new Audio("bg/PokemonCenter.mp3");
 
 const Layout = () => {
   return (

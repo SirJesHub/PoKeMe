@@ -89,8 +89,16 @@ function Timer({ max, round }) {
   };
 
   return (
-    <div className="App">
-      <h2>{timer}</h2>
+    <div>
+      <h2
+        style={{
+          color: "rgb(123,123,123)",
+          fontSize: "10px",
+          lineHeight: "10px",
+        }}
+      >
+        {timer}
+      </h2>
       <button onClick={onClickReset}>Reset</button>
     </div>
   );

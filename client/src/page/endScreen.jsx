@@ -11,6 +11,7 @@ import { BOARD_SMALL } from "../utils/constants";
 import Board from "../components/Board";
 import Timer from "../components/Timer";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import Button from "../components/Button";
 
 const EndScreen = () => {
   const { socket } = useSocket();
@@ -30,7 +31,7 @@ const EndScreen = () => {
     receivedScore === score ? "draw" : receivedScore > score ? "win" : "lose";
 
   const winRes = [
-    `Congratulations! ${name}`,
+    `Congrats! ${name}`,
     `${name}, You won!`,
     `${name}, you’ve beated ${oppName}!`,
     `You did it! ${name}`,
@@ -71,33 +72,87 @@ const EndScreen = () => {
 
   if (result === "win") {
     return (
-      <div>
-        <h1>
-          {score}:{receivedScore}
-        </h1>
-        <h1> {winRes[Math.floor(Math.random() * winRes.length)]}</h1>
-        <button onClick={() => handleRestartClick()}>restart</button>
-      </div>
+      <VStack>
+        <Board size="big">
+          <p
+            className="texts"
+            style={{
+              fontSize: "20px",
+              lineHeight: "35px",
+              textAlign: "center",
+              wordWrap: "break-word",
+              fontSizeAdjust: "0.58",
+            }}
+          >
+            <VStack gap={"20px"}>
+              <p>
+                {score}:{receivedScore}
+              </p>
+
+              {winRes[Math.floor(Math.random() * winRes.length)]}
+              <Button onClick={() => handleRestartClick()}>
+                <p className="texts">Restart</p>
+              </Button>
+            </VStack>
+          </p>
+        </Board>
+      </VStack>
     );
   } else if (result === "draw") {
     return (
-      <div>
-        <h1>
-          {score}:{receivedScore}
-        </h1>
-        <h1> {drawRes[Math.floor(Math.random() * drawRes.length)]}</h1>
-        <button onClick={() => handleRestartClick()}>restart</button>
-      </div>
+      <VStack>
+        <Board size="big">
+          <p
+            className="texts"
+            style={{
+              fontSize: "20px",
+              lineHeight: "35px",
+              textAlign: "center",
+              wordWrap: "break-word",
+              fontSizeAdjust: "0.58",
+            }}
+          >
+            <VStack gap={"20px"}>
+              <p>
+                {score}:{receivedScore}
+              </p>
+
+              {drawRes[Math.floor(Math.random() * drawRes.length)]}
+              <Button onClick={() => handleRestartClick()}>
+                <p className="texts">Restart</p>
+              </Button>
+            </VStack>
+          </p>
+        </Board>
+      </VStack>
     );
   } else if (result === "lose") {
     return (
-      <div>
-        <h1>
-          {score}:{receivedScore}
-        </h1>
-        <h1>{loseRes[Math.floor(Math.random() * loseRes.length)]}</h1>
-        <button onClick={() => handleRestartClick()}>restart</button>
-      </div>
+      <VStack>
+        <Board size="big">
+          <p
+            className="texts"
+            style={{
+              fontSize: "20px",
+              lineHeight: "35px",
+              textAlign: "center",
+              wordWrap: "break-word",
+              fontSizeAdjust: "0.58",
+            }}
+          >
+            <VStack gap={"20px"}>
+              <p>
+                {score}:{receivedScore}
+              </p>
+
+              {loseRes[Math.floor(Math.random() * loseRes.length)]}
+              <Button onClick={() => handleRestartClick()}>
+                <p className="texts">Restart</p>
+              </Button>
+            </VStack>
+          </p>
+        </Board>
+      </VStack>
     );
   }
 };

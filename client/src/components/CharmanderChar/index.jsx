@@ -1,7 +1,7 @@
-import { CHARMANDER1 } from "../../utils/constants";
+import { CHARMANDER1, CHARMANDERGIF } from "../../utils/constants";
 
 const CharmanderChar = () => {
-  return <img src={CHARMANDER1} style={{ width: "50px" }} />;
+  return <img src={CHARMANDERGIF} style={{ width: "50px" }} />;
 };
 
 export default CharmanderChar;

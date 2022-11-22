@@ -1,11 +1,7 @@
 import "./App.css";
+import useSound from "use-sound";
 import io from "socket.io-client";
 import { useState } from "react";
-import Game from "./Game";
-import { JOY } from "./utils/constants";
-import { BG_JOY } from "./utils/constants";
-import { BUTTON2 } from "./utils/constants";
-import { BUTTON_BIG } from "./utils/constants";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
@@ -18,22 +14,19 @@ import WaitingRoom from "./page/waitingRoom";
 import GameRoom from "./page/gameRoom";
 import RoomFull from "./page/roomFull";
 import EndScreen from "./page/endScreen";
+import { useEffect } from "react";
+//import BGMUSIC from "../public/bg/PokemonCenter.mp3";
 
 // const socket = io.connect("http://localhost:3001");
+//let audio = new Audio(BGMUSIC);
 
 function App() {
-  const [username, setUsername] = useState("");
-  const [room, setRoom] = useState("");
-  const [gameReady, setGameReady] = useState(false);
+  //const [play] = useSound(BGMUSIC);
 
-  // const joinRoom = () => {
-  //   if (username !== "" && room !== "") {
-  //     socket.emit("join_room", room);
-  //     // roomSize = io.sockets.adapter.rooms.get(room).size;
-  //     // console.log(`hi`);
-  //     setGameReady(true);
-  //   }
-  // };
+  // useEffect(() => {
+  //   play();
+  // }, []);
+
   return (
     <SocketProvider>
       <BrowserRouter>

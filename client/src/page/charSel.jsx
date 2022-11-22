@@ -10,6 +10,7 @@ import { PICKACHU1 } from "../utils/constants";
 import PikachuChar from "../components/PikachuChar";
 import CharmanderChar from "../components/CharmanderChar";
 import BulbaChar from "../components/BulbasaurChar";
+import Board from "../components/Board";
 
 const CharSel = () => {
   const navigate = useNavigate();
@@ -72,7 +73,22 @@ const CharSel = () => {
       </HStack>
     </VStack>
   ) : (
-    <div>Waiting for char select</div>
+    <VStack>
+      <Board size="big">
+        <VStack>
+          <p
+            style={{
+              width: "80%",
+              alignContent: "center",
+              justifyContent: "center",
+              lineHeight: "30px",
+            }}
+          >
+            Waiting for the 2nd Player to select a character...
+          </p>
+        </VStack>
+      </Board>
+    </VStack>
   );
 };
 

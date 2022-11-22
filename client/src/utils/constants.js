@@ -32,6 +32,7 @@ export const X = "button/X.svg";
 export const PREVIOUS = "button/Previous.svg";
 export const NEXT = "button/Back.svg";
 
+//export const JOY_IMAGE = "bg/Gameboy.svg";
 export const JOY_IMAGE = "bg/Joy.png";
 export const BG_GAME = "bg/gamebg.jpg";
 export const BG = "bg/Bg.svg";
@@ -43,5 +44,6 @@ export const BOARD_BIG = "board/bigBoard.svg";
 export const BOARD_SMALL = "board/smallBoard.png";
 export const COPY = "button/copy.png";
 
-export const GAME_LOGO = "logoBig.svg";
+export const GAME_LOGO = "bg/Logo.gif";
 export let AUDIO = "bg/fart-03.mp3";
+export let BGMUSIC = "bg/PokemonCenter.mp3";

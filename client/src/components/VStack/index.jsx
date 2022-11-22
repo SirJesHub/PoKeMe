@@ -8,6 +8,7 @@ const VStack = ({ children, gap, style }) => {
         alignItems: "center",
         height: "100%",
         rowGap: gap,
+        fontFamily: "Press Start 2P",
         ...style,
       }}
     >
