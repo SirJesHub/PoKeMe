@@ -27,7 +27,15 @@ io.on("connection", (socket) => {
 
   socket.on("req_player_count", (data) => {
     data.playerCount = playerOnline;
-    io.to(socket.id).emit(get_player_count, data);
+    // let rooms = io.sockets.adapter.rooms.entries();
+    // let playerInRoom = 0;
+    // console.log(rooms);
+    // for (let room in rooms) {
+    //   console.log(room);
+    //   playerInRoom += io.sockets.adapter.rooms.get(room).size;
+    // }
+    // data.playerPlaying = playerInRoom;
+    io.to(socket.id).emit("get_player_count", data);
   });
 
   socket.on("join_room", (data) => {
