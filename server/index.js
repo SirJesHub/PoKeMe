@@ -5,6 +5,7 @@ const { Server } = require("socket.io");
 
 const rooms = {};
 const player = {};
+let playerOnline = 0;
 
 const app = express();
 
@@ -21,6 +22,21 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log(`User conencted: ${socket.id}`);
+  playerOnline++;
+  console.log(`Player Online: ${playerOnline}`);
+
+  socket.on("req_player_count", (data) => {
+    data.playerCount = playerOnline;
+    // let rooms = io.sockets.adapter.rooms.entries();
+    // let playerInRoom = 0;
+    // console.log(rooms);
+    // for (let room in rooms) {
+    //   console.log(room);
+    //   playerInRoom += io.sockets.adapter.rooms.get(room).size;
+    // }
+    // data.playerPlaying = playerInRoom;
+    io.to(socket.id).emit("get_player_count", data);
+  });
 
   socket.on("join_room", (data) => {
     socket.join(data);
@@ -159,6 +175,8 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log(`User disconencted: ${socket.id}`);
+    playerOnline--;
+    console.log(`Player Online: ${playerOnline}`);
     const pid = socket.id;
     // clear user data
     player[pid] = undefined;
