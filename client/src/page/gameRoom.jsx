@@ -67,9 +67,12 @@ const Timer = forwardRef(
       if (timer === 0) {
         if (max === 10) {
           switchRole();
+          console.log("something else");
           max = 20;
         } else if (max === 15 || 20) {
+          // switchRole();
           switchIsTurn();
+          console.log("something");
           max = 10;
         }
         clearTimer(getDeadTime());
@@ -278,7 +281,6 @@ const GameRoom = () => {
 
   const switchIsTurn = async () => {
     setDisplayAns(true);
-    if (currentAnswer === "") return;
     const tempScore = await checkAnswer();
     if (round > 3) {
       endGame(tempScore);
