@@ -6,6 +6,7 @@ import TextInput from "../components/TextInput";
 import VStack from "../components/VStack";
 import { useSocket } from "../services/socket-io";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Setup = () => {
   const [name, setName] = useState("");
@@ -33,6 +34,10 @@ const Setup = () => {
   document.addEventListener("DOMContentLoaded", (event) => {
     reqPlayerOnline();
   });
+
+  useEffect(() => {
+    reqPlayerOnline();
+  }, []);
 
   socket.on("room_full", () => {
     navigate("/roomFull");
@@ -64,13 +69,13 @@ const Setup = () => {
       <div id="Myframe">
         <br></br>
         <p> player online = {playerOnline}</p>
-        <button
+        {/* <button
           onClick={() => {
             reqPlayerOnline();
           }}
         >
           &#9658;
-        </button>
+        </button> */}
       </div>
       <GameLogo />
       <HStack style={{ justifyContent: "space-around" }}>
