@@ -6,7 +6,7 @@ import TextInput from "../components/TextInput";
 import VStack from "../components/VStack";
 import { useSocket } from "../services/socket-io";
 import { useSearchParams } from "react-router-dom";
-
+import { BOARD_BIG } from "../utils/constants";
 const JoinRoom = () => {
   const { socket } = useSocket();
   const navigate = useNavigate();
@@ -27,15 +27,21 @@ const JoinRoom = () => {
   };
 
   return (
-    <VStack gap={"40px"}>
-      <TextInput
-        value={roomId}
-        onChange={setRoomId}
-        placeholderVal="Enter Room Code"
-      />
-      <p>Welcome {name}</p>
-      <Button onClick={() => handleSumbit()}>Join Room</Button>
-      <Board size="big"></Board>
+    <VStack>
+      <Board size="big">
+        <VStack gap={"20px"}>
+          <p>Welcome {name}</p>
+          <TextInput
+            value={roomId}
+            onChange={setRoomId}
+            placeholderVal="Enter Room Code"
+          />
+
+          <Button onClick={() => handleSumbit()}>
+            <p className="texts">Join Room</p>
+          </Button>
+        </VStack>
+      </Board>
     </VStack>
   );
 };

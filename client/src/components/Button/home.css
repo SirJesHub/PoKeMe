@@ -1,0 +1,16 @@
+.texts {
+  font-family: "Press Start 2P";
+  font-size: 10px;
+}
+
+::placeholder {
+  font-family: "Press Start 2P";
+}
+
+p {
+  font-family: "Press Start 2P";
+}
+
+div {
+  font-family: "Press Start 2P";
+}

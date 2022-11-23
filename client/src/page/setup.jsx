@@ -75,12 +75,19 @@ const Setup = () => {
       <GameLogo />
       <HStack style={{ justifyContent: "space-around" }}>
         <VStack gap={"16px"}>
-          <Button size="small">Name</Button>
+          <Button size="small">
+            {" "}
+            <p className="texts">Name</p>
+          </Button>
           <TextInput value={name} onChange={setName} />
         </VStack>
         <VStack gap={"16px"}>
-          <Button onClick={handleJoinRoom}>Join Room</Button>
-          <Button onClick={handleCreateRoom}>Create Room</Button>
+          <Button onClick={handleJoinRoom}>
+            <p className="texts">Join Room</p>
+          </Button>
+          <Button onClick={handleCreateRoom}>
+            <p className="texts">Create Room</p>
+          </Button>
         </VStack>
       </HStack>
     </VStack>

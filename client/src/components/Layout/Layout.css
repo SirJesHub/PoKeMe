@@ -6,6 +6,7 @@
   left: 50%;
   z-index: -10;
   transform: translate(-50%, -50%);
+  font-family: "Press Start 2P";
 }
 .game {
   width: 43%;
@@ -15,4 +16,10 @@
   left: 50%;
   z-index: 1;
   transform: translate(-50%, -50%);
+  font-family: "Press Start 2P";
+}
+
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 }
