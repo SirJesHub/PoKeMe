@@ -77,19 +77,18 @@ const EndScreen = () => {
           <p
             className="texts"
             style={{
-              fontSize: "20px",
-              lineHeight: "35px",
+              lineHeight: "1.5vw",
               textAlign: "center",
               wordWrap: "break-word",
-              fontSizeAdjust: "0.58",
+              fontSizeAdjust: "0.7",
             }}
           >
             <VStack gap={"20px"}>
               <p>
                 {score}:{receivedScore}
               </p>
-
-              {winRes[Math.floor(Math.random() * winRes.length)]}
+              {winRes[Math.floor(Math.random() * winRes.length)]} <br />
+              {oppName} loses
               <Button onClick={() => handleRestartClick()}>
                 <p className="texts">Restart</p>
               </Button>
@@ -105,19 +104,18 @@ const EndScreen = () => {
           <p
             className="texts"
             style={{
-              fontSize: "20px",
-              lineHeight: "35px",
+              lineHeight: "2vw",
               textAlign: "center",
-              wordWrap: "break-word",
-              fontSizeAdjust: "0.58",
+              fontSize: "2vw",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             <VStack gap={"20px"}>
               <p>
                 {score}:{receivedScore}
               </p>
-
-              {drawRes[Math.floor(Math.random() * drawRes.length)]}
+              {drawRes[Math.floor(Math.random() * drawRes.length)]} <br />
               <Button onClick={() => handleRestartClick()}>
                 <p className="texts">Restart</p>
               </Button>
@@ -133,19 +131,19 @@ const EndScreen = () => {
           <p
             className="texts"
             style={{
-              fontSize: "20px",
-              lineHeight: "35px",
+              lineHeight: "1.5vw",
               textAlign: "center",
               wordWrap: "break-word",
-              fontSizeAdjust: "0.58",
+              fontSizeAdjust: "0.7",
             }}
           >
             <VStack gap={"20px"}>
               <p>
                 {score}:{receivedScore}
               </p>
-
               {loseRes[Math.floor(Math.random() * loseRes.length)]}
+              <br />
+              {oppName} won :(
               <Button onClick={() => handleRestartClick()}>
                 <p className="texts">Restart</p>
               </Button>

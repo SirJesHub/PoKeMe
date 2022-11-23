@@ -5,7 +5,7 @@ const Player2Char = ({ size }) => {
     <img
       src={size == 1 ? PIKACHUGIF : size == 2 ? CHARMANDERGIF : BULBASAURGIF}
       style={{
-        width: "75px",
+        width: "8vw",
       }}
     />
   );

@@ -10,22 +10,37 @@ import PikachuChar from "../components/PikachuChar";
 import BulbaChar from "../components/BulbasaurChar";
 import GameBoard from "../components/GameBoard";
 import { BGMUSIC } from "../utils/constants";
+import React from "react";
 
 //      <GameBoard childern={"Vinze"}></GameBoard>
 
-const Home = () => {
+const Home = ({ playSound }) => {
   const navigate = useNavigate();
   const { socket } = useSocket();
+  const [isAlertVisible, setIsAlertVisible] = React.useState(false);
+
+  const handleButtonClick = () => {
+    setIsAlertVisible(true);
+  };
+
+  setTimeout(() => {
+    setIsAlertVisible(false);
+  }, 3000);
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
     <VStack gap={"20px"}>
-      <embed
-        src={BGMUSIC}
-        loop="true"
-        autostart="true"
-        width="2"
-        height="0"
-      ></embed>
+      <button onClick={handleButtonClick}>Show alert</button>
+      {isAlertVisible && (
+        <div className="alert-container">
+          <div className="alert-inner">Alert! Alert!</div>
+        </div>
+      )}
       <GameLogo />
       <Button
         size={"small"}

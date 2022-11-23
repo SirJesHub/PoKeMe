@@ -11,7 +11,7 @@ const Setup = () => {
   const [name, setName] = useState("");
   const navigate = useNavigate();
   const { socket } = useSocket();
-  const [playerOnline, setPlayerOnline] = useState(420);
+  const [playerOnline, setPlayerOnline] = useState(1);
   const [playerInGame, setPlayerInGame] = useState(420);
 
   socket.on("get_player_count", (data) => {
@@ -60,39 +60,40 @@ const Setup = () => {
   };
 
   return (
-    <VStack>
-      <div id="Myframe">
-        <br></br>
-        <p> player online = {playerOnline}</p>
-        <button
-          onClick={() => {
-            reqPlayerOnline();
-          }}
-        >
-          &#9658;
-        </button>
-      </div>
-      <GameLogo />
-      <HStack style={{ justifyContent: "space-around" }}>
-        <VStack gap={"16px"}>
-          <Button size="small">
-            {" "}
-            <p className="texts">Name</p>
-          </Button>
-          <TextInput value={name} onChange={setName} />
-        </VStack>
-        <VStack gap={"16px"}>
-          <Button onClick={handleJoinRoom}>
-            <p className="texts">Join Room</p>
-          </Button>
-          <Button onClick={handleCreateRoom}>
-            <p className="texts">Create Room</p>
-          </Button>
-        </VStack>
-      </HStack>
-    </VStack>
+    <div>
+      <Button
+        onClick={reqPlayerOnline}
+        size="small"
+        style={{ margin: "none", width: "10px", position: "relative" }}
+      >
+        <span style={{ margin: "none", fontSize: "10px" }}>
+          &#129001; {playerOnline}
+        </span>
+      </Button>
+      <VStack gap={"1vw"}>
+        <HStack>
+          <GameLogo />
+        </HStack>
+
+        <HStack style={{ justifyContent: "space-around" }}>
+          <VStack gap={"1vw"}>
+            <Button size="small">
+              <p className="texts">Name</p>
+            </Button>
+            <TextInput value={name} onChange={setName} />
+          </VStack>
+          <VStack gap={"1vw"}>
+            <Button onClick={handleJoinRoom}>
+              <p className="texts">Join Room</p>
+            </Button>
+            <Button onClick={handleCreateRoom}>
+              <p className="texts">Create Room</p>
+            </Button>
+          </VStack>
+        </HStack>
+      </VStack>
+    </div>
   );
 };
 
 export default Setup;
-//export const roomCode = roomCode;

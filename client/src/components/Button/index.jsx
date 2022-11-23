@@ -1,7 +1,7 @@
 import { BUTTON2, BUTTON_BIG, BUTTON_SMALL } from "../../utils/constants";
 import "./home.css";
 
-let audio = new Audio("bg/fart-03.mp3");
+let audio = new Audio("bg/PokemonButtonSound.mp3");
 
 const start = () => {
   console.log("playsound");
@@ -19,6 +19,7 @@ const Button = ({ children, size, onClick }) => {
         backgroundColor: "transparent",
         cursor: "pointer",
         fontFamily: "Press Start 2P",
+        margin: "0px",
       }}
       onClick={() => {
         start();
@@ -27,7 +28,7 @@ const Button = ({ children, size, onClick }) => {
     >
       <img
         src={size == "small" ? BUTTON_SMALL : BUTTON_BIG}
-        style={{ width: "75%" }}
+        style={{ width: "75%", margin: "0px" }}
       />
       <div
         style={{
@@ -35,10 +36,11 @@ const Button = ({ children, size, onClick }) => {
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
-          fontSize: "50%",
+          fontSize: "1vw",
+          margin: "0px",
         }}
       >
-        <p>{children}</p>
+        <p style={{ margin: "none" }}>{children}</p>
       </div>
     </button>
   );

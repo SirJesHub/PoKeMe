@@ -37,7 +37,7 @@ const CharSel = () => {
       <GameLogo />
 
       <HStack>
-        <VStack gap={"16px"}>
+        <VStack gap={"1vw"}>
           <Button
             size="small"
             onClick={() => {
@@ -48,7 +48,7 @@ const CharSel = () => {
           </Button>
           <PikachuChar></PikachuChar>
         </VStack>
-        <VStack gap={"16px"}>
+        <VStack gap={"1vw"}>
           <Button
             size="small"
             onClick={() => {
@@ -59,7 +59,7 @@ const CharSel = () => {
           </Button>
           <CharmanderChar></CharmanderChar>
         </VStack>
-        <VStack gap={"16px"}>
+        <VStack gap={"1vw"}>
           <Button
             size="small"
             onClick={() => {
@@ -79,8 +79,7 @@ const CharSel = () => {
           <p
             style={{
               width: "80%",
-              alignContent: "center",
-              justifyContent: "center",
+              textAlign: "center",
               lineHeight: "30px",
             }}
           >

@@ -30,7 +30,17 @@ const JoinRoom = () => {
     <VStack>
       <Board size="big">
         <VStack gap={"20px"}>
-          <p>Welcome {name}</p>
+          <p
+            style={{
+              fontSize: "1.5vw",
+              margin: "0px",
+              lineHeight: "4vw",
+              textAlign: "center",
+            }}
+          >
+            Welcome <br />{" "}
+            <span style={{ color: "orange", fontSize: "3vw" }}> {name} </span>
+          </p>
           <TextInput
             value={roomId}
             onChange={setRoomId}

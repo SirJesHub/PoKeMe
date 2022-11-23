@@ -30,13 +30,15 @@ const WaitingRoom = () => {
           <p
             className="texts"
             style={{
-              fontSize: "20px",
+              fontSize: "1.5vw",
               lineHeight: "35px",
               textAlign: "center",
             }}
           >
-            Welcome {name} <br />
-            {roomCode}
+            Welcome <br />
+            <span style={{ fontSize: "2.5vw", color: "orange" }}> {name} </span>
+            <br />
+            Code: {roomCode}
             <button
               onClick={() => {
                 navigator.clipboard.writeText(roomCode);
@@ -49,14 +51,16 @@ const WaitingRoom = () => {
               <img
                 src={COPY}
                 style={{
-                  width: "20px",
+                  width: "1.5vw",
                   cursor: "pointer",
                 }}
               />
             </button>
             <br />
-            Waiting For <br />
-            Player 2
+            <span style={{ fontSize: "1.5vw", color: "gray" }}>
+              {" "}
+              Please Wait For <br /> a 2nd Player
+            </span>
           </p>
         </VStack>
       </Board>

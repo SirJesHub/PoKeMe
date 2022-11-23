@@ -1,13 +1,9 @@
 import { useEffect, useState, useRef } from "react";
-import Character from "../components/Player1Char";
-import PikachuChar from "../components/PikachuChar";
 import { useSocket, socketRequest } from "../services/socket-io";
 import Player1Char from "../components/Player1Char";
 import VStack from "../components/VStack";
 import Player2Char from "../components/Player2Char";
 import HStack from "../components/HStack";
-import GameLogo from "../components/GameLogo";
-import { BOARD_SMALL } from "../utils/constants";
 import Board from "../components/Board";
 import Timer2 from "../utils/timer";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -15,6 +11,8 @@ import { forwardRef } from "react";
 import { useImperativeHandle } from "react";
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
+import React from "react";
+import AnswerAlert from "../components/AnswerAlert";
 
 const Timer = forwardRef(
   ({ max, switchIsTyping, switchIsTurn, switchRole }, ref) => {
@@ -102,16 +100,7 @@ const Timer = forwardRef(
           lineHeight: "10px",
         }}
       >
-        <h2>{timer}</h2>
-        {/* <button
-        onClick={async () => {
-          // await switchIsTyping();
-          // await switchIsTurn();
-          switchRole();
-        }}
-      >
-        Reset
-      </button> */}
+        {timer}
       </div>
     );
   }
@@ -135,6 +124,7 @@ const GameRoom = () => {
   let username = searchParams.get("name");
   let room = searchParams.get("roomID");
   const childRef = useRef(null);
+  const [displayAns, setDisplayAns] = useState("");
 
   //----------------------------------------input sending/checking----------------------------------------------//
   const sendInput = async () => {
@@ -170,8 +160,12 @@ const GameRoom = () => {
 
       let lastAns = inputList[inputList.length - 1];
       let tempScore = 0;
+      setDisplayAns(currentAnswer);
       for (let i = 0; i < lastAns.length; i++) {
-        if (currentAnswer.charAt(i) != null) {
+        if (
+          currentAnswer.charAt(i) != null &&
+          currentAnswer.length == currentInput.length
+        ) {
           if (lastAns.charAt(i) === currentAnswer.charAt(i)) {
             tempScore++;
           }
@@ -180,12 +174,17 @@ const GameRoom = () => {
 
       if (tempScore > 0) {
         console.log(`${username} has answer correctly`);
+
         setScore((prevscore) => prevscore + tempScore);
       }
 
       await socket.emit("send_answer", answerData);
       setCurrentAnswer("");
       // await switchIsTurn();
+      if (round == 4 && currentAnswer === "Vinze") {
+        console.log("bonus");
+        score = score + 10;
+      }
       return tempScore > 0 ? score + tempScore : score;
     }
   };
@@ -366,18 +365,10 @@ const GameRoom = () => {
     );
   }, []);
 
-  // socket.on("your_turn", (data) => {
-  //   turn = turn + 1;
-  // });
-
-  // //when timer ends your turn
-  // socket.emit("turn_end", turn);
-
-  // socket.on("game_ends");
-
   console.log("my", myCharId);
 
   console.log("other", otherCharId);
+  console.log("the correct Ans", displayAns);
 
   const test = () => {
     alert("it work");
@@ -397,9 +388,9 @@ const GameRoom = () => {
   ) : isTurn ? (
     isTyping ? (
       <VStack>
-        <HStack style={{ fontSize: "10px" }}>
-          <VStack gap={"0px"}>
-            <p style={{ lineHeight: "0px" }}>Time</p>
+        <HStack gap={"1vw"} style={{ fontSize: "1vw" }}>
+          <VStack gap={"1vw"}>
+            Time
             <Timer
               max={10}
               switchIsTyping={switchIsTyping}
@@ -408,17 +399,17 @@ const GameRoom = () => {
               ref={childRef}
               style={{
                 color: "rgb(123,123,123)",
-                fontSize: "10px",
-                lineHeight: "0px",
+                fontSize: "0.5vw",
+                lineHeight: "1vw",
               }}
             />
           </VStack>
-          <VStack gap={"0px"}>
-            <p style={{ lineHeight: "0px" }}>Score</p>
+          <VStack gap={"1vw"}>
+            <p>Score</p>
             {score}
           </VStack>
-          <VStack gap={"0px"}>
-            <p style={{ lineHeight: "0px" }}>Round</p>
+          <VStack gap={"1vw"}>
+            <p>Round</p>
             {round}
           </VStack>
         </HStack>
@@ -448,28 +439,26 @@ const GameRoom = () => {
         </HStack>
       </VStack>
     ) : (
-      <VStack gap={"0px"}>
-        <Board size="big" gap={"0px"}>
-          <VStack gap={"0px"}>
+      <VStack gap={"1vw"}>
+        <Board size="big">
+          <VStack gap={"1vw"}>
             <Timer2
               max={20}
               style={{
                 color: "rgb(123,123,123)",
-                fontSize: "10px",
-                lineHeight: "0px",
+                fontSize: "5vw",
+                lineHeight: "1vw",
               }}
             />
-            <p style={{ textAlign: "center", margin: "10px" }}>
-              I am waiting for answer
-            </p>
+            <p style={{ textAlign: "center" }}>I am waiting for answer</p>
 
-            <HStack>
-              <VStack gap={"0px"}>
-                <p style={{ lineHeight: "0px" }}>Score</p>
+            <HStack gap={"2vw"}>
+              <VStack gap={"1vw"}>
+                <p>Score</p>
                 {score}
               </VStack>
-              <VStack gap={"0px"}>
-                <p style={{ lineHeight: "0px" }}>Round</p>
+              <VStack gap={"1vw"}>
+                <p>Round</p>
                 {round}
               </VStack>
             </HStack>
@@ -479,9 +468,9 @@ const GameRoom = () => {
     )
   ) : isTyping ? (
     <VStack>
-      <HStack style={{ fontSize: "10px" }}>
-        <VStack gap={"0px"}>
-          <p style={{ lineHeight: "0px" }}>Time</p>
+      <HStack gap={"1vw"} style={{ fontSize: "1vw" }}>
+        <VStack gap={"1vw"}>
+          <p>Time</p>
           <Timer
             max={20}
             switchIsTyping={switchIsTyping}
@@ -490,22 +479,23 @@ const GameRoom = () => {
             ref={childRef}
             style={{
               color: "rgb(123,123,123)",
-              fontSize: "10px",
-              lineHeight: "10px",
+              fontSize: "0.5vw",
+              lineHeight: "0px",
             }}
           />
         </VStack>
-        <VStack gap={"0px"}>
-          <p style={{ lineHeight: "0px" }}>Score</p>
+        <VStack gap={"1vw"}>
+          <p>Score</p>
           {score}
         </VStack>
-        <VStack gap={"0px"}>
-          <p style={{ lineHeight: "0px" }}>Round</p>
+        <VStack gap={"1vw"}>
+          <p>Round</p>
           {round}
         </VStack>
       </HStack>
 
       <HStack style={{ justifyContent: "center" }}>
+        <AnswerAlert>{displayAns}</AnswerAlert>
         <Player1Char size={myCharId}></Player1Char>
         <Player2Char size={otherCharId}></Player2Char>
       </HStack>
@@ -547,11 +537,11 @@ const GameRoom = () => {
 
           <HStack>
             <VStack gap={"0px"}>
-              <p style={{ lineHeight: "0px" }}>Score</p>
+              <p style={{ lineHeight: "2vw" }}>Score</p>
               {score}
             </VStack>
             <VStack gap={"0px"}>
-              <p style={{ lineHeight: "0px" }}>Round</p>
+              <p style={{ lineHeight: "2vw" }}>Round</p>
               {round}
             </VStack>
           </HStack>
@@ -559,42 +549,6 @@ const GameRoom = () => {
       </Board>
     </VStack>
   );
-  // return !isTurn ? (
-  //   <VStack>
-  //     <HStack>
-  //       <GameLogo />
-  //       <Timer max={20} />
-  //     </HStack>
-
-  //     <HStack>
-  //       <Player1Char size={myCharId}></Player1Char>
-
-  //       <Player2Char size={otherCharId}></Player2Char>
-  //     </HStack>
-  //     <HStack>
-  //       <Board size="small"></Board>
-  //     </HStack>
-  //   </VStack>
-  // ) : (
-  //   <VStack>
-  //     <HStack>
-  //       <GameLogo />
-  //       <Timer max={20} />
-  //     </HStack>
-
-  //     <HStack>
-  //       <VStack gap={"16px"}>
-  //         <Player1Char size={myCharId}></Player1Char>
-  //       </VStack>
-  //       <VStack gap={"16px"}>
-  //         <Player2Char size={otherCharId}></Player2Char>
-  //       </VStack>
-  //     </HStack>
-  //     <HStack>
-  //       <Board size="small" text="yes"></Board>
-  //     </HStack>
-  //   </VStack>
-  // );
 };
 
 export default GameRoom;
