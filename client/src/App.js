@@ -3,8 +3,8 @@ import io from "socket.io-client";
 import { useState } from "react";
 
 import Game from "./Game";
+import Popup from './Popup';
 import { W } from "./utils/constants";
-
 
 const socket = io.connect("http://localhost:3001");
 
@@ -12,6 +12,12 @@ function App() {
   const [username, setUsername] = useState("");
   const [room, setRoom] = useState("");
   const [gameReady, setGameReady] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); //Pop-up Boolean
+ 
+  //Pop-up condition check
+  const togglePopup = () => {
+    setIsOpen(!isOpen);
+  }
 
   const joinRoom = () => {
     if (username !== "" && room !== "") {
@@ -19,6 +25,7 @@ function App() {
       setGameReady(true);
     }
   };
+
   return (
     <div className="App">
       {!gameReady ? (
@@ -44,6 +51,16 @@ function App() {
       ) : (
         <Game socket={socket} username={username} room={room} />
       )}
+      <div> 
+      <input type="button" value="How to play" onClick={togglePopup}/>
+      {isOpen && <Popup
+        content={<>
+          <b>How to play DUPME</b>
+          <p>Have computer</p>
+        </>}
+        handleClose={togglePopup}
+      />}
+      </div>
     </div>
   );
 }

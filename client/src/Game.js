@@ -7,6 +7,14 @@ function Game({ socket, username, room }) {
   const [score, setScore] = useState(0);
   const [counter, setCounter] = useState(10);
 
+  //Define audio part
+  let audio = new Audio("/fart-03.mp3")
+  
+  //Audio play function
+  const start = () => {
+    audio.play()
+  }
+
   const sendInput = async () => {
     if (currentInput !== "") {
       const inputData = {
@@ -101,6 +109,7 @@ function Game({ socket, username, room }) {
         onClick={() => {
           sendInput();
           startTimer();
+          start();
         }}
       >
         &#9658;
@@ -120,6 +129,8 @@ function Game({ socket, username, room }) {
       <button
         onClick={() => {
           checkAnswer();
+          start();
+          //Start the audio when button is clicked
         }}
       >
         &#9658;
