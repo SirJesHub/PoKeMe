@@ -213,8 +213,8 @@ const GameRoom = () => {
     socket.emit("switch_role", payload);
   };
 
-  socket.on("switching_role", (data) => {
-    if (round > 3) {
+  socket.off("switching_role").on("switching_role", (data) => {
+    if (data.round > 3) {
       endGame(score);
       return;
     }
@@ -237,7 +237,7 @@ const GameRoom = () => {
     await socket.emit("switch_isTyping", turn);
   };
 
-  socket.on("switching_isTyping", (data) => {
+  socket.off("switching_isTyping").on("switching_isTyping", (data) => {
     setIsTurn(!data.isTurn);
     setIsTyping(data.isTyping);
   });
@@ -305,16 +305,18 @@ const GameRoom = () => {
     });
   });
 
-  socket.on("ending_game_for_another", (payload) => {
-    const oppName = payload.username;
-    const foo = score;
-    const recievedScore = payload.score;
-    const result = compareScore(recievedScore, foo);
-    navigate({
-      pathname: "/endScreen",
-      search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
+  socket
+    .off("ending_game_for_another")
+    .on("ending_game_for_another", (payload) => {
+      const oppName = payload.username;
+      const foo = score;
+      const recievedScore = payload.score;
+      const result = compareScore(recievedScore, foo);
+      navigate({
+        pathname: "/endScreen",
+        search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
+      });
     });
-  });
 
   socket.on("restarting_game", async (data) => {
     setCurrentInput("");
