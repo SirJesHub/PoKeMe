@@ -518,7 +518,8 @@ const GameRoom = () => {
               lineHeight: "10px",
             }}
           />
-          <p>{input}</p>
+          <p>You have 5 seconds to remember this</p>
+          <h2>{input}</h2>
         </VStack>
       </div>
     ) : (
