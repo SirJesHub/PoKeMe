@@ -17,7 +17,7 @@ import Button from "../components/Button";
 import TextInput from "../components/TextInput";
 
 const Timer = forwardRef(
-  ({ max, switchIsTyping, switchIsTurn, switchRole }, ref) => {
+  ({ max, switchIsTyping, switchIsTurn, switchRole, stopDisplay }, ref) => {
     const Ref = useRef(null);
     const { socket } = useSocket();
     const [timer, setTimer] = useState(max);
@@ -67,14 +67,26 @@ const Timer = forwardRef(
       if (timer === 0) {
         if (max === 10) {
           switchRole();
+          console.log("something else");
           max = 20;
-        } else if (max === 20) {
+        } else if (max === 15 || 20) {
+          // switchRole();
           switchIsTurn();
+          console.log("something");
           max = 10;
         }
         clearTimer(getDeadTime());
       }
     }, [timer]);
+
+    useEffect(() => {
+      if (timer === 15) {
+        max = 15;
+        stopDisplay();
+      }
+    }, [timer]);
+
+    useEffect(() => {}, [timer]);
 
     useImperativeHandle(ref, () => ({
       resetTimerFunc,
@@ -125,9 +137,11 @@ const GameRoom = () => {
   const [isReady, setIsReady] = useState(false);
   const [isTurn, setIsTurn] = useState(true);
   const [isTyping, setIsTyping] = useState(true);
+  const [displayAns, setDisplayAns] = useState(true);
   const [currentInput, setCurrentInput] = useState("");
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [inputList, setInputList] = useState([]);
+  const [input, setInput] = useState("");
   const [score, setScore] = useState(0);
   const [round, setRound] = useState(1);
   const [searchParams] = useSearchParams();
@@ -155,7 +169,7 @@ const GameRoom = () => {
 
   socket.on("recieve_input", (data) => {
     console.log("input recieved" + data.round);
-    // setRound((prevRound) => prevRound + 1);
+    setInput((prevInput) => data.input);
     setInputList((list) => [...list, data.input]);
   });
 
@@ -194,6 +208,12 @@ const GameRoom = () => {
     console.log("answer recieved" + data.round);
     // setRound((prevRound) => prevRound + 1);
   });
+
+  function stopDisplay() {
+    setDisplayAns(false);
+    setInput("");
+    return;
+  }
   //--------------------------------------------------input sending/checking---------------------------------//
 
   //-----------------------------------------round logic----------------------------------------------------//
@@ -230,8 +250,8 @@ const GameRoom = () => {
     socket.emit("switch_role", payload);
   };
 
-  socket.on("switching_role", (data) => {
-    if (round > 3) {
+  socket.off("switching_role").on("switching_role", (data) => {
+    if (data.round > 3) {
       endGame(score);
       return;
     }
@@ -254,13 +274,13 @@ const GameRoom = () => {
     await socket.emit("switch_isTyping", turn);
   };
 
-  socket.on("switching_isTyping", (data) => {
+  socket.off("switching_isTyping").on("switching_isTyping", (data) => {
     setIsTurn(!data.isTurn);
     setIsTyping(data.isTyping);
   });
 
   const switchIsTurn = async () => {
-    if (currentAnswer === "") return;
+    setDisplayAns(true);
     const tempScore = await checkAnswer();
     if (round > 3) {
       endGame(tempScore);
@@ -281,6 +301,7 @@ const GameRoom = () => {
 
   socket.on("switching_isTurn", (data) => {
     setRound((round) => (round = data.round + 1));
+    setDisplayAns(true);
     setIsTurn(data.isTurn);
     setIsTyping(!data.isTyping);
   });
@@ -322,16 +343,18 @@ const GameRoom = () => {
     });
   });
 
-  socket.on("ending_game_for_another", (payload) => {
-    const oppName = payload.username;
-    const foo = score;
-    const recievedScore = payload.score;
-    const result = compareScore(recievedScore, foo);
-    navigate({
-      pathname: "/endScreen",
-      search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
+  socket
+    .off("ending_game_for_another")
+    .on("ending_game_for_another", (payload) => {
+      const oppName = payload.username;
+      const foo = score;
+      const recievedScore = payload.score;
+      const result = compareScore(recievedScore, foo);
+      navigate({
+        pathname: "/endScreen",
+        search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
+      });
     });
-  });
 
   socket.on("restarting_game", async (data) => {
     setCurrentInput("");
@@ -405,6 +428,7 @@ const GameRoom = () => {
               switchIsTyping={switchIsTyping}
               switchIsTurn={switchIsTurn}
               switchRole={switchRole}
+              stopDisplay={stopDisplay}
               ref={childRef}
               style={{
                 color: "rgb(123,123,123)",
@@ -478,15 +502,15 @@ const GameRoom = () => {
       </VStack>
     )
   ) : isTyping ? (
-    <VStack>
-      <HStack style={{ fontSize: "10px" }}>
-        <VStack gap={"0px"}>
-          <p style={{ lineHeight: "0px" }}>Time</p>
+    displayAns ? (
+      <div>
+        <VStack>
           <Timer
             max={20}
             switchIsTyping={switchIsTyping}
             switchIsTurn={switchIsTurn}
             switchRole={switchRole}
+            stopDisplay={stopDisplay}
             ref={childRef}
             style={{
               color: "rgb(123,123,123)",
@@ -494,41 +518,64 @@ const GameRoom = () => {
               lineHeight: "10px",
             }}
           />
+          <p>You have 5 seconds to remember this</p>
+          <h2>{input}</h2>
         </VStack>
-        <VStack gap={"0px"}>
-          <p style={{ lineHeight: "0px" }}>Score</p>
-          {score}
-        </VStack>
-        <VStack gap={"0px"}>
-          <p style={{ lineHeight: "0px" }}>Round</p>
-          {round}
-        </VStack>
-      </HStack>
+      </div>
+    ) : (
+      <VStack>
+        <HStack style={{ fontSize: "10px" }}>
+          <VStack gap={"0px"}>
+            <p style={{ lineHeight: "0px" }}>Time</p>
+            <Timer
+              max={15}
+              switchIsTyping={switchIsTyping}
+              switchIsTurn={switchIsTurn}
+              switchRole={switchRole}
+              stopDisplay={stopDisplay}
+              ref={childRef}
+              style={{
+                color: "rgb(123,123,123)",
+                fontSize: "10px",
+                lineHeight: "10px",
+              }}
+            />
+          </VStack>
+          <VStack gap={"0px"}>
+            <p style={{ lineHeight: "0px" }}>Score</p>
+            {score}
+          </VStack>
+          <VStack gap={"0px"}>
+            <p style={{ lineHeight: "0px" }}>Round</p>
+            {round}
+          </VStack>
+        </HStack>
 
-      <HStack style={{ justifyContent: "center" }}>
-        <Player1Char size={myCharId}></Player1Char>
-        <Player2Char size={otherCharId}></Player2Char>
-      </HStack>
-      <HStack>
-        <TextInput
-          value={currentAnswer}
-          onChange={setCurrentAnswer}
-          onKeyDown={(event) => {
-            event.key === "Enter" && sendInput();
-          }}
-          placeholderVal="Type Away!"
-        />
-        <Button
-          size="small"
-          onClick={async () => {
-            // await checkAnswer();
-            await switchIsTurn();
-          }}
-        >
-          Answer
-        </Button>
-      </HStack>
-    </VStack>
+        <HStack style={{ justifyContent: "center" }}>
+          <Player1Char size={myCharId}></Player1Char>
+          <Player2Char size={otherCharId}></Player2Char>
+        </HStack>
+        <HStack>
+          <TextInput
+            value={currentAnswer}
+            onChange={setCurrentAnswer}
+            onKeyDown={(event) => {
+              event.key === "Enter" && sendInput();
+            }}
+            placeholderVal="Type Away!"
+          />
+          <Button
+            size="small"
+            onClick={async () => {
+              // await checkAnswer();
+              await switchIsTurn();
+            }}
+          >
+            Answer
+          </Button>
+        </HStack>
+      </VStack>
+    )
   ) : (
     <VStack gap={"0px"}>
       <Board size="big" gap={"0px"}>
@@ -559,42 +606,6 @@ const GameRoom = () => {
       </Board>
     </VStack>
   );
-  // return !isTurn ? (
-  //   <VStack>
-  //     <HStack>
-  //       <GameLogo />
-  //       <Timer max={20} />
-  //     </HStack>
-
-  //     <HStack>
-  //       <Player1Char size={myCharId}></Player1Char>
-
-  //       <Player2Char size={otherCharId}></Player2Char>
-  //     </HStack>
-  //     <HStack>
-  //       <Board size="small"></Board>
-  //     </HStack>
-  //   </VStack>
-  // ) : (
-  //   <VStack>
-  //     <HStack>
-  //       <GameLogo />
-  //       <Timer max={20} />
-  //     </HStack>
-
-  //     <HStack>
-  //       <VStack gap={"16px"}>
-  //         <Player1Char size={myCharId}></Player1Char>
-  //       </VStack>
-  //       <VStack gap={"16px"}>
-  //         <Player2Char size={otherCharId}></Player2Char>
-  //       </VStack>
-  //     </HStack>
-  //     <HStack>
-  //       <Board size="small" text="yes"></Board>
-  //     </HStack>
-  //   </VStack>
-  // );
 };
 
 export default GameRoom;
