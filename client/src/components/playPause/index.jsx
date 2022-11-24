@@ -34,29 +34,9 @@ class PlayPauseButton extends Component {
 
   render() {
     return (
-      <button
-        style={{
-          position: "relative",
-          padding: "0px",
-          margin: "0px",
-          border: "none",
-          backgroundColor: "transparent",
-          cursor: "pointer",
-          fontFamily: "Press Start 2P",
-        }}
-        onClick={this.playPause}
-      >
-        <img src={BUTTON_SMALL} style={{ width: "75%" }} />
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            top: "50%",
-            transform: "translate(-50%, -50%)",
-            fontSize: "50%",
-          }}
-        ></div>
-      </button>
+      <Button size="small" onClick={this.playPause}>
+        Music &#128266;
+      </Button>
     );
   }
 }

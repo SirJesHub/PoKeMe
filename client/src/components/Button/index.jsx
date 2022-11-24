@@ -36,11 +36,11 @@ const Button = ({ children, size, onClick }) => {
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
-          fontSize: "1vw",
+
           margin: "0px",
         }}
       >
-        <p style={{ margin: "none" }}>{children}</p>
+        <p style={{ margin: "none", fontSize: "80%" }}>{children}</p>
       </div>
     </button>
   );

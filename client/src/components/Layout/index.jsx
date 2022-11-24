@@ -19,7 +19,7 @@ const Layout = () => {
           height: "100vh",
         }}
       />
-      <PlayPauseButton></PlayPauseButton>
+      <PlayPauseButton>&#10003;</PlayPauseButton>
       <div className="joy-image">
         <img src={JOY_IMAGE} width="100%" />
         <div className="game">

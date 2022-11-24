@@ -1,40 +1,52 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import React from "react";
+import { BUTTON_SMALL } from "../../utils/constants";
 
-const Popup = (props) => {
+const Popup = ({ children, onClick }) => {
+  const [isAlertVisible, setIsAlertVisible] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleButtonClick = () => {
+    if (isOpen) {
+      setIsAlertVisible(false);
+      setIsOpen(false);
+    } else {
+      setIsAlertVisible(true);
+      setIsOpen(true);
+    }
+  };
+
   return (
-    <div className="popup-box">
-      <div className="box">
-        <span className="close-icon" onClick={props.handleClose}>
-          x
-        </span>
-        {props.content}
+    <button
+      style={{
+        position: "relative",
+        padding: "0px",
+        margin: "0px",
+        border: "none",
+        backgroundColor: "transparent",
+        cursor: "pointer",
+        fontFamily: "Press Start 2P",
+        margin: "0px",
+      }}
+      onClick={() => {
+        handleButtonClick(); //Start the audio when button is clicked
+      }}
+    >
+      <img src={BUTTON_SMALL} style={{ width: "75%", margin: "0px" }} />
+      <div
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+
+          margin: "0px",
+        }}
+      >
+        <p style={{ margin: "none", fontSize: "0.8vw" }}>{children}</p>
       </div>
-    </div>
+    </button>
   );
 };
 export default Popup;
-
-// const AnswerAlert = ({ children }) => {
-//   const [isAlertVisible, setIsAlertVisible] = useState(false);
-
-//   useEffect(() => {
-//     setIsAlertVisible(true);
-//   }, []);
-
-//   setTimeout(() => {
-//     setIsAlertVisible(false);
-//   }, 1000);
-
-//   return (
-//     <div>
-//       {isAlertVisible && (
-//         <div className="alert-container">
-//           <div className="alert-inner">hint: {children}</div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-// export default AnswerAlert;

@@ -44,7 +44,7 @@ const CharSel = () => {
               handleCharSel(1);
             }}
           >
-            Pikachu
+            <span style={{ fontSize: "90%" }}>Pikachu</span>
           </Button>
           <PikachuChar></PikachuChar>
         </VStack>
@@ -55,7 +55,7 @@ const CharSel = () => {
               handleCharSel(2);
             }}
           >
-            Charmander
+            <span style={{ fontSize: "60%" }}>Charmander</span>
           </Button>
           <CharmanderChar></CharmanderChar>
         </VStack>
@@ -66,7 +66,7 @@ const CharSel = () => {
               handleCharSel(3);
             }}
           >
-            Bulbasaur
+            <span style={{ fontSize: "60%" }}>Bulbasaur</span>
           </Button>
           <BulbaChar></BulbaChar>
         </VStack>
