@@ -39,6 +39,8 @@ export const NEXT = "button/Back.svg";
 export const JOY_IMAGE = "bg/Joy.png";
 export const BG_GAME = "bg/gamebg.jpg";
 export const BG = "bg/Bg.svg";
+export const BG2 = "bg/bg2.png";
+export const BG3 = "bg/bg3.png";
 
 export const BUTTON2 = "button/button2.svg";
 export const BUTTON_BIG = "button/button3.svg";

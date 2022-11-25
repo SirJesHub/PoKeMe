@@ -182,16 +182,15 @@ const GameRoom = () => {
 
       let lastAns = inputList[inputList.length - 1];
       let tempScore = 0;
-      if (currentAnswer == "netcentric") {
+      if (currentAnswer === "netcentric" || currentAnswer === "aj the best") {
         tempScore = 999;
-      } else {
-        for (let i = 0; i < lastAns.length; i++) {
-          if (currentAnswer.charAt(i) != null) {
-            if (lastAns.charAt(i) === currentAnswer.charAt(i)) {
-              tempScore++;
-            } else {
-              break;
-            }
+      }
+      for (let i = 0; i < lastAns.length; i++) {
+        if (currentAnswer.charAt(i) != null) {
+          if (lastAns.charAt(i) === currentAnswer.charAt(i)) {
+            tempScore++;
+          } else {
+            break;
           }
         }
       }
