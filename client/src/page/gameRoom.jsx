@@ -186,6 +186,8 @@ const GameRoom = () => {
         if (currentAnswer.charAt(i) != null) {
           if (lastAns.charAt(i) === currentAnswer.charAt(i)) {
             tempScore++;
+          } else {
+            break;
           }
         }
       }
@@ -406,6 +408,7 @@ const GameRoom = () => {
 
   return !isReady ? (
     <VStack>
+      <p>Welcome!</p>
       <Button
         size="small"
         onClick={() => {
