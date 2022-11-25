@@ -37,36 +37,36 @@ const CharSel = () => {
       <GameLogo />
 
       <HStack>
-        <VStack gap={"16px"}>
+        <VStack gap={"1vw"}>
           <Button
             size="small"
             onClick={() => {
               handleCharSel(1);
             }}
           >
-            Pikachu
+            <span style={{ fontSize: "90%" }}>Pikachu</span>
           </Button>
           <PikachuChar></PikachuChar>
         </VStack>
-        <VStack gap={"16px"}>
+        <VStack gap={"1vw"}>
           <Button
             size="small"
             onClick={() => {
               handleCharSel(2);
             }}
           >
-            Charmander
+            <span style={{ fontSize: "60%" }}>Charmander</span>
           </Button>
           <CharmanderChar></CharmanderChar>
         </VStack>
-        <VStack gap={"16px"}>
+        <VStack gap={"1vw"}>
           <Button
             size="small"
             onClick={() => {
               handleCharSel(3);
             }}
           >
-            Bulbasaur
+            <span style={{ fontSize: "60%" }}>Bulbasaur</span>
           </Button>
           <BulbaChar></BulbaChar>
         </VStack>
@@ -79,8 +79,7 @@ const CharSel = () => {
           <p
             style={{
               width: "80%",
-              alignContent: "center",
-              justifyContent: "center",
+              textAlign: "center",
               lineHeight: "30px",
             }}
           >

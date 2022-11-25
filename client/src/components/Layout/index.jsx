@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { BGMUSIC, BG_GAME, JOY_IMAGE } from "../../utils/constants";
+import PlayPauseButton from "../playPause";
 import "./Layout.css";
 let audio = new Audio("bg/PokemonCenter.mp3");
 
@@ -18,6 +19,7 @@ const Layout = () => {
           height: "100vh",
         }}
       />
+      <PlayPauseButton>&#10003;</PlayPauseButton>
       <div className="joy-image">
         <img src={JOY_IMAGE} width="100%" />
         <div className="game">

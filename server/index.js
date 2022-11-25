@@ -24,6 +24,7 @@ io.on("connection", (socket) => {
   console.log(`User conencted: ${socket.id}`);
   playerOnline++;
   console.log(`Player Online: ${playerOnline}`);
+  io.to(socket.id).emit("get_player_count", playerOnline);
 
   socket.on("req_player_count", (data) => {
     data.playerCount = playerOnline;

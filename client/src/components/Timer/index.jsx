@@ -93,8 +93,6 @@ function Timer({ max, round }) {
       <h2
         style={{
           color: "rgb(123,123,123)",
-          fontSize: "10px",
-          lineHeight: "10px",
         }}
       >
         {timer}

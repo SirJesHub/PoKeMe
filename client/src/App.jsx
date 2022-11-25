@@ -1,5 +1,5 @@
 import "./App.css";
-import useSound from "use-sound";
+import { useSound } from "use-sound";
 import io from "socket.io-client";
 import { useState } from "react";
 
@@ -15,24 +15,23 @@ import GameRoom from "./page/gameRoom";
 import RoomFull from "./page/roomFull";
 import EndScreen from "./page/endScreen";
 import { useEffect } from "react";
-//import BGMUSIC from "../public/bg/PokemonCenter.mp3";
+import { BGMUSIC } from "../src/utils/constants";
+import Button from "./components/Button";
 
 // const socket = io.connect("http://localhost:3001");
-//let audio = new Audio(BGMUSIC);
+let audio = new Audio("bg/PokemonCenter.mp3");
 
-function App() {
-  //const [play] = useSound(BGMUSIC);
-
-  // useEffect(() => {
-  //   play();
-  // }, []);
+const App = () => {
+  useEffect(() => {
+    audio.play();
+  }, [audio]);
 
   return (
     <SocketProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
+            <Route index element={<Home playSound={() => audio.play()} />} />
             <Route path={"setup"} element={<Setup />} />
             <Route path={"joinRoom"} element={<JoinRoom />} />
             <Route path={"charSel"} element={<CharSel />} />
@@ -86,6 +85,6 @@ function App() {
   //     </body>
   //   </div>
   // );
-}
+};
 
 export default App;

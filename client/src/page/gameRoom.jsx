@@ -110,11 +110,9 @@ const Timer = forwardRef(
         className="App"
         style={{
           color: "red",
-          fontSize: "10px",
-          lineHeight: "10px",
         }}
       >
-        <h2>{timer}</h2>
+        {timer}
         {/* <button
         onClick={async () => {
           // await switchIsTyping();
@@ -188,6 +186,8 @@ const GameRoom = () => {
         if (currentAnswer.charAt(i) != null) {
           if (lastAns.charAt(i) === currentAnswer.charAt(i)) {
             tempScore++;
+          } else {
+            break;
           }
         }
       }
@@ -408,6 +408,7 @@ const GameRoom = () => {
 
   return !isReady ? (
     <VStack>
+      <p>Welcome!</p>
       <Button
         size="small"
         onClick={() => {
@@ -420,9 +421,9 @@ const GameRoom = () => {
   ) : isTurn ? (
     isTyping ? (
       <VStack>
-        <HStack style={{ fontSize: "10px" }}>
-          <VStack gap={"0px"}>
-            <p style={{ lineHeight: "0px" }}>Time</p>
+        <HStack style={{ fontSize: "50%" }} gap={"10%"}>
+          <VStack gap={"10%"}>
+            <p>Time</p>
             <Timer
               max={10}
               switchIsTyping={switchIsTyping}
@@ -432,17 +433,15 @@ const GameRoom = () => {
               ref={childRef}
               style={{
                 color: "rgb(123,123,123)",
-                fontSize: "10px",
-                lineHeight: "0px",
               }}
             />
           </VStack>
-          <VStack gap={"0px"}>
-            <p style={{ lineHeight: "0px" }}>Score</p>
+          <VStack gap={"10%"}>
+            <p>Score</p>
             {score}
           </VStack>
-          <VStack gap={"0px"}>
-            <p style={{ lineHeight: "0px" }}>Round</p>
+          <VStack gap={"10%"}>
+            <p>Round</p>
             {round}
           </VStack>
         </HStack>
@@ -472,28 +471,27 @@ const GameRoom = () => {
         </HStack>
       </VStack>
     ) : (
-      <VStack gap={"0px"}>
-        <Board size="big" gap={"0px"}>
-          <VStack gap={"0px"}>
-            <Timer2
-              max={20}
-              style={{
-                color: "rgb(123,123,123)",
-                fontSize: "10px",
-                lineHeight: "0px",
-              }}
-            />
-            <p style={{ textAlign: "center", margin: "10px" }}>
-              I am waiting for answer
-            </p>
-
+      <VStack gap={"20%"}>
+        <Board size="big">
+          <VStack style={{ fontSize: "80%" }} gap={"50%"}>
             <HStack>
-              <VStack gap={"0px"}>
-                <p style={{ lineHeight: "0px" }}>Score</p>
+              <Timer2
+                max={20}
+                style={{
+                  color: "rgb(123,123,123)",
+                }}
+              />
+            </HStack>
+
+            <HStack>I am waiting for answer</HStack>
+
+            <HStack gap={"20%"}>
+              <VStack gap={"50%"}>
+                <p>Score</p>
                 {score}
               </VStack>
-              <VStack gap={"0px"}>
-                <p style={{ lineHeight: "0px" }}>Round</p>
+              <VStack gap={"10%"}>
+                <p>Round</p>
                 {round}
               </VStack>
             </HStack>
@@ -503,30 +501,30 @@ const GameRoom = () => {
     )
   ) : isTyping ? (
     displayAns ? (
-      <div>
-        <VStack>
-          <Timer
-            max={20}
-            switchIsTyping={switchIsTyping}
-            switchIsTurn={switchIsTurn}
-            switchRole={switchRole}
-            stopDisplay={stopDisplay}
-            ref={childRef}
-            style={{
-              color: "rgb(123,123,123)",
-              fontSize: "10px",
-              lineHeight: "10px",
-            }}
-          />
-          <p>You have 5 seconds to remember this</p>
-          <h2>{input}</h2>
-        </VStack>
-      </div>
+      <VStack gap={"20%"}>
+        <Board size="big">
+          <VStack style={{ fontSize: "70%", lineHeight: "100%" }} gap={"50%"}>
+            <Timer
+              max={20}
+              switchIsTyping={switchIsTyping}
+              switchIsTurn={switchIsTurn}
+              switchRole={switchRole}
+              stopDisplay={stopDisplay}
+              ref={childRef}
+              style={{
+                color: "rgb(123,123,123)",
+              }}
+            />
+            <p>You have 5 seconds to remember this</p>
+            <p style={{ color: "orange", fontSize: "20px" }}>{input}</p>
+          </VStack>
+        </Board>
+      </VStack>
     ) : (
       <VStack>
-        <HStack style={{ fontSize: "10px" }}>
-          <VStack gap={"0px"}>
-            <p style={{ lineHeight: "0px" }}>Time</p>
+        <HStack style={{ fontSize: "50%" }} gap={"10%"}>
+          <VStack gap={"10%"}>
+            <p>Time</p>
             <Timer
               max={15}
               switchIsTyping={switchIsTyping}
@@ -541,12 +539,12 @@ const GameRoom = () => {
               }}
             />
           </VStack>
-          <VStack gap={"0px"}>
-            <p style={{ lineHeight: "0px" }}>Score</p>
+          <VStack gap={"10%"}>
+            <p>Score</p>
             {score}
           </VStack>
-          <VStack gap={"0px"}>
-            <p style={{ lineHeight: "0px" }}>Round</p>
+          <VStack gap={"10%"}>
+            <p>Round</p>
             {round}
           </VStack>
         </HStack>
@@ -577,28 +575,24 @@ const GameRoom = () => {
       </VStack>
     )
   ) : (
-    <VStack gap={"0px"}>
-      <Board size="big" gap={"0px"}>
-        <VStack gap={"0px"}>
+    <VStack gap={"20%"}>
+      <Board size="big">
+        <VStack style={{ fontSize: "70%" }} gap={"50%"}>
           <Timer2
             max={10}
             style={{
               color: "rgb(123,123,123)",
-              fontSize: "10px",
-              lineHeight: "10px",
             }}
           />
-          <p style={{ textAlign: "center", margin: "10px" }}>
-            Waiting for their input...
-          </p>
+          <p>Waiting for their input...</p>
 
-          <HStack>
-            <VStack gap={"0px"}>
-              <p style={{ lineHeight: "0px" }}>Score</p>
+          <HStack gap={"20%"}>
+            <VStack gap={"0%"}>
+              Score <br />
               {score}
             </VStack>
-            <VStack gap={"0px"}>
-              <p style={{ lineHeight: "0px" }}>Round</p>
+            <VStack gap={"10%"}>
+              <p>Round</p>
               {round}
             </VStack>
           </HStack>

@@ -45,5 +45,5 @@ export const BOARD_SMALL = "board/smallBoard.png";
 export const COPY = "button/copy.png";
 
 export const GAME_LOGO = "bg/Logo.gif";
-export let AUDIO = "bg/fart-03.mp3";
+export let AUDIO = "bg/PokemonButtonSound.mp3";
 export let BGMUSIC = "bg/PokemonCenter.mp3";

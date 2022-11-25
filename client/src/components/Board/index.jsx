@@ -17,7 +17,8 @@ const Board = ({ children, size, text }) => {
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
-          fontSize: "20px",
+          padding: "10%",
+          textAlign: "center",
         }}
       >
         {children}
