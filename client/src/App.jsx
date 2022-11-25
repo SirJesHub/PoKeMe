@@ -14,6 +14,7 @@ import WaitingRoom from "./page/waitingRoom";
 import GameRoom from "./page/gameRoom";
 import RoomFull from "./page/roomFull";
 import EndScreen from "./page/endScreen";
+import ServerRoom from "./page/serverRoom";
 import { useEffect } from "react";
 import { BGMUSIC } from "../src/utils/constants";
 import Button from "./components/Button";
@@ -39,6 +40,7 @@ const App = () => {
             <Route path={"gameRoom"} element={<GameRoom />} />
             <Route path={"roomFull"} element={<RoomFull />} />
             <Route path={"endScreen"} element={<EndScreen />} />
+            <Route path={"server"} element={<ServerRoom />} />
           </Route>
         </Routes>
       </BrowserRouter>

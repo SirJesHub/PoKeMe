@@ -22,6 +22,10 @@ const JoinRoom = () => {
     });
   });
 
+  socket.on("resetting_server", () => {
+    navigate("/");
+  });
+
   const handleSumbit = () => {
     if (!roomId) return;
     socket.emit("join_room", roomId);

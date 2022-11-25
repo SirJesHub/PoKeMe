@@ -21,6 +21,10 @@ const WaitingRoom = () => {
     });
   });
 
+  socket.on("resetting_server", () => {
+    navigate("/");
+  });
+
   //let x = Math.floor((Math.random() * 1000) + 1);
 
   return (

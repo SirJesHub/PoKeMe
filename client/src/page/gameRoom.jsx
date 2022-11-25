@@ -378,7 +378,14 @@ const GameRoom = () => {
     setIsTyping(setPlayer1);
     setIsReady(true);
   });
-  //------------------------------------------------round logic----------------------------------------//
+  //---------------------at---------------------------round logic----------------------------------------//
+
+  socket.on("resetting_server", () => {
+    setCurrentInput("");
+    setScore(0);
+    setRound(1);
+    navigate("/");
+  });
 
   useEffect(() => {
     socketRequest(socket, ["get_both_charID"], "get_both_charID_response").then(

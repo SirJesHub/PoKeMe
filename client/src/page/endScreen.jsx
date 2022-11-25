@@ -70,6 +70,10 @@ const EndScreen = () => {
     });
   };
 
+  socket.on("resetting_server", () => {
+    navigate("/");
+  });
+
   if (result === "win") {
     return (
       <VStack>

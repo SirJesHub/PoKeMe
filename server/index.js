@@ -130,6 +130,11 @@ io.on("connection", (socket) => {
     await socket.emit("restarting_game", data.startToken); //emit to the one who click restart
   });
 
+  socket.on("reset_server", () => {
+    socket.broadcast.emit("resetting_server");
+    socket.emit("resetting_server");
+  });
+
   // socket.on("turn_end", (data) => {
   //   console.log(`recieve answer = ${data.answer}`);
   //   socket.nsp.to(data).emit("your turn", data);

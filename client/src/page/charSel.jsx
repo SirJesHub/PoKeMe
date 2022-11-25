@@ -27,6 +27,10 @@ const CharSel = () => {
     });
   });
 
+  socket.on("resetting_server", () => {
+    navigate("/");
+  });
+
   const handleCharSel = (charID) => {
     setIsCharSel(true);
     socket.emit("select_char", charID);

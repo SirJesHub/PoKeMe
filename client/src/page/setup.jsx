@@ -44,6 +44,10 @@ const Setup = () => {
     navigate("/roomFull");
   });
 
+  socket.on("resetting_server", () => {
+    navigate("/");
+  });
+
   const handleJoinRoom = () => {
     if (!name) return;
     navigate("/joinRoom");
