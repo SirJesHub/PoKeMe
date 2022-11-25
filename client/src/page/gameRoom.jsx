@@ -466,7 +466,7 @@ const GameRoom = () => {
               await switchIsTyping();
             }}
           >
-            Answer
+            Submit
           </Button>
         </HStack>
       </VStack>

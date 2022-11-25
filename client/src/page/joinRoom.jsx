@@ -7,6 +7,7 @@ import VStack from "../components/VStack";
 import { useSocket } from "../services/socket-io";
 import { useSearchParams } from "react-router-dom";
 import { BOARD_BIG } from "../utils/constants";
+import { io } from "socket.io-client";
 const JoinRoom = () => {
   const { socket } = useSocket();
   const navigate = useNavigate();

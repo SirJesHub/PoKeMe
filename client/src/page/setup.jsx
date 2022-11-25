@@ -6,6 +6,7 @@ import TextInput from "../components/TextInput";
 import VStack from "../components/VStack";
 import { useSocket } from "../services/socket-io";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Setup = () => {
   const [name, setName] = useState("");
@@ -30,13 +31,17 @@ const Setup = () => {
     await socket.emit("req_player_count", reqData);
   };
 
-  document.addEventListener("DOMContentLoaded", (event) => {
+  // document.addEventListener("DOMContentLoaded", (event) => {
+  //   reqPlayerOnline();
+  // });
+
+  useEffect(() => {
     reqPlayerOnline();
-  });
+  }, []);
 
   socket.on("room_full", () => {
-    navigate("/roomFull");
     socket.disconnect();
+    navigate("/roomFull");
   });
 
   const handleJoinRoom = () => {
