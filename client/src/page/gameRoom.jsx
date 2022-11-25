@@ -182,12 +182,16 @@ const GameRoom = () => {
 
       let lastAns = inputList[inputList.length - 1];
       let tempScore = 0;
-      for (let i = 0; i < lastAns.length; i++) {
-        if (currentAnswer.charAt(i) != null) {
-          if (lastAns.charAt(i) === currentAnswer.charAt(i)) {
-            tempScore++;
-          } else {
-            break;
+      if (currentAnswer == "netcentric") {
+        tempScore = 999;
+      } else {
+        for (let i = 0; i < lastAns.length; i++) {
+          if (currentAnswer.charAt(i) != null) {
+            if (lastAns.charAt(i) === currentAnswer.charAt(i)) {
+              tempScore++;
+            } else {
+              break;
+            }
           }
         }
       }
@@ -339,7 +343,7 @@ const GameRoom = () => {
     await socket.emit("end_game_for_another", p2Payload);
     navigate({
       pathname: "/endScreen",
-      search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
+      search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}&charId=${myCharId}&otherCharId=${otherCharId}`,
     });
   });
 
@@ -352,7 +356,7 @@ const GameRoom = () => {
       const result = compareScore(recievedScore, foo);
       navigate({
         pathname: "/endScreen",
-        search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}`,
+        search: `?roomID=${room}&name=${username}&result=${result}&receivedScore=${recievedScore}&score=${score}&oppName=${oppName}&charId=${myCharId}&otherCharId=${otherCharId}`,
       });
     });
 

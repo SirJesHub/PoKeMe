@@ -5,6 +5,7 @@ export const PICKACHU4 = "/pickachuSpirtes/Pickachu4.svg";
 export const PICKACHU5 = "/pickachuSpirtes/Pickachu5.svg";
 export const PICKACHU6 = "/pickachuSpirtes/Pickachu6.svg";
 export const PIKACHUGIF = "/pickachuSpirtes/PikachuGIF.gif";
+export const RAICHUGIF = "/pickachuSpirtes/RAICHUGIF.gif";
 
 // import { CHARMANDER6 } from "./utils/constants";
 export const CHARMANDER1 = "/charmanderSprites/Charmander1.svg";
@@ -14,6 +15,7 @@ export const CHARMANDER4 = "/charmanderSprites/Charmander4.svg";
 export const CHARMANDER5 = "/charmanderSprites/Charmander5.svg";
 export const CHARMANDER6 = "/charmanderSprites/Charmander6.svg";
 export const CHARMANDERGIF = "/charmanderSprites/CharmanderGIF.gif";
+export const CHARIZARDGIF = "/charmanderSprites/CHARIZARDGIF.gif";
 
 export const BULBASAUR1 = "bulbasaurSprites/Bulbasaur1.svg";
 export const BULBASAUR2 = "bulbasaurSprites/Bulbasaur2.svg";
@@ -22,6 +24,7 @@ export const BULBASAUR4 = "bulbasaurSprites/Bulbasaur4.svg";
 export const BULBASAUR5 = "bulbasaurSprites/Bulbasaur5.svg";
 export const BULBASAUR6 = "bulbasaurSprites/Bulbasaur6.svg";
 export const BULBASAURGIF = "bulbasaurSprites/BulbasaurGIF.gif";
+export const VENUSAURGIF = "bulbasaurSprites/VENUSAURGIF.gif";
 
 export const W = "button/W.svg";
 export const A = "button/A.svg";

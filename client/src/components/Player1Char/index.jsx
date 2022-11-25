@@ -1,9 +1,28 @@
-import { BULBASAURGIF, CHARMANDERGIF, PIKACHUGIF } from "../../utils/constants";
+import {
+  BULBASAURGIF,
+  CHARMANDERGIF,
+  PIKACHUGIF,
+  RAICHUGIF,
+  CHARIZARDGIF,
+  VENUSAURGIF,
+} from "../../utils/constants";
 
 const Player1Char = ({ size }) => {
   return (
     <img
-      src={size == 1 ? PIKACHUGIF : size == 2 ? CHARMANDERGIF : BULBASAURGIF}
+      src={
+        size == 1
+          ? PIKACHUGIF
+          : size == 2
+          ? CHARMANDERGIF
+          : size == 3
+          ? BULBASAURGIF
+          : size == 4
+          ? RAICHUGIF
+          : size == 5
+          ? CHARIZARDGIF
+          : VENUSAURGIF
+      }
       style={{
         width: "8vw",
       }}

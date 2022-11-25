@@ -10,7 +10,8 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState();
 
   useEffect(() => {
-    const socketClient = io.connect("http://172.20.10.4:3001");
+    // const socketClient = io.connect("http://172.20.10.4:3001");
+    const socketClient = io.connect("http://localhost:3001");
 
     setSocket(socketClient);
 

@@ -12,7 +12,9 @@ import Board from "../components/Board";
 import Timer from "../components/Timer";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../components/Button";
-
+import { VENUSAURGIF } from "../utils/constants";
+import { CHARIZARDGIF } from "../utils/constants";
+import { RAICHUGIF } from "../utils/constants";
 const EndScreen = () => {
   const { socket } = useSocket();
   const [searchParams] = useSearchParams();
@@ -23,6 +25,12 @@ const EndScreen = () => {
   const result = searchParams.get("result");
   const receivedScore = searchParams.get("receivedScore");
   const score = searchParams.get("score");
+  const charId = searchParams.get("charId");
+
+  const character = { 1: RAICHUGIF, 2: CHARIZARDGIF, 3: VENUSAURGIF };
+  let myCharacter;
+
+  if (result === "win") myCharacter = character[charId];
 
   const startToken =
     receivedScore === score ? "draw" : receivedScore > score ? "lose" : "win";
@@ -87,12 +95,13 @@ const EndScreen = () => {
               fontSizeAdjust: "0.7",
             }}
           >
-            <VStack gap={"20px"}>
+            <VStack gap={"10px"}>
               <p>
                 {score}:{receivedScore}
               </p>
               {winRes[Math.floor(Math.random() * winRes.length)]} <br />
               {oppName} loses
+              <img src={myCharacter} style={{ width: "8vw" }} />
               <Button onClick={() => handleRestartClick()}>
                 <p className="texts">Restart</p>
               </Button>
