@@ -28,14 +28,6 @@ io.on("connection", (socket) => {
 
   socket.on("req_player_count", (data) => {
     data.playerCount = playerOnline;
-    // let rooms = io.sockets.adapter.rooms.entries();
-    // let playerInRoom = 0;
-    // console.log(rooms);
-    // for (let room in rooms) {
-    //   console.log(room);
-    //   playerInRoom += io.sockets.adapter.rooms.get(room).size;
-    // }
-    // data.playerPlaying = playerInRoom;
     io.to(socket.id).emit("get_player_count", data);
   });
 
@@ -62,13 +54,6 @@ io.on("connection", (socket) => {
       io.to(socket.id).emit("room_full");
     }
   });
-
-  // socket.on("req_player_count", (data) => {
-  //   console.log(`player count + ${io.sockets.adapter.rooms.get(data).size}`);
-  //   socket
-  //     .to()
-  //     .emit("send_player_count", io.sockets.adapter.rooms.get(data).size);
-  // });
 
   socket.on("update_timer2", (data) => {
     console.log(
@@ -134,11 +119,6 @@ io.on("connection", (socket) => {
     socket.broadcast.emit("resetting_server");
     socket.emit("resetting_server");
   });
-
-  // socket.on("turn_end", (data) => {
-  //   console.log(`recieve answer = ${data.answer}`);
-  //   socket.nsp.to(data).emit("your turn", data);
-  // });
 
   socket.on("select_char", (charId) => {
     const playerId = socket.id;

@@ -113,15 +113,6 @@ const Timer = forwardRef(
         }}
       >
         {timer}
-        {/* <button
-        onClick={async () => {
-          // await switchIsTyping();
-          // await switchIsTurn();
-          switchRole();
-        }}
-      >
-        Reset
-      </button> */}
       </div>
     );
   }
@@ -398,15 +389,6 @@ const GameRoom = () => {
       }
     );
   }, []);
-
-  // socket.on("your_turn", (data) => {
-  //   turn = turn + 1;
-  // });
-
-  // //when timer ends your turn
-  // socket.emit("turn_end", turn);
-
-  // socket.on("game_ends");
 
   console.log("my", myCharId);
 

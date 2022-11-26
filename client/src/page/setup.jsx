@@ -31,10 +31,6 @@ const Setup = () => {
     await socket.emit("req_player_count", reqData);
   };
 
-  // document.addEventListener("DOMContentLoaded", (event) => {
-  //   reqPlayerOnline();
-  // });
-
   useEffect(() => {
     reqPlayerOnline();
   }, []);

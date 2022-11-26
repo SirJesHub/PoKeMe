@@ -25,8 +25,6 @@ const WaitingRoom = () => {
     navigate("/");
   });
 
-  //let x = Math.floor((Math.random() * 1000) + 1);
-
   return (
     <VStack>
       <Board size="big">
