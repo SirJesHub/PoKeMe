@@ -14,8 +14,6 @@ import React from "react";
 import Popup from "../components/H2P";
 import Board from "../components/Board";
 
-//      <GameBoard childern={"Vinze"}></GameBoard>
-
 const Home = ({ playSound }) => {
   const navigate = useNavigate();
   const { socket } = useSocket();
